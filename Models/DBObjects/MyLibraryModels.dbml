@@ -37,6 +37,7 @@
       <Column Name="YearPublished" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Publisher" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Association Name="Book_Ownership" Member="Ownerships" ThisKey="BookId" OtherKey="BookId" Type="Ownership" />
+      <Association Name="CoverImage_Book" Member="CoverImage" ThisKey="CoverImageId" OtherKey="CoverImageId" Type="CoverImage" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Bookshelfs" Member="Bookshelfs">
@@ -46,6 +47,14 @@
       <Column Name="LibraryId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Association Name="Bookshelf_Shelf" Member="Shelfs" ThisKey="BookshelfId" OtherKey="BookshelfId" Type="Shelf" />
       <Association Name="Library_Bookshelf" Member="Library" ThisKey="LibraryId" OtherKey="LibraryId" Type="Library" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CoverImages" Member="CoverImages">
+    <Type Name="CoverImage">
+      <Column Name="CoverImageId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ImageLocation" Type="System.String" DbType="VarChar(256) NOT NULL" CanBeNull="false" />
+      <Column Name="IsLocal" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="CoverImage_Book" Member="Books" ThisKey="CoverImageId" OtherKey="CoverImageId" Type="Book" />
     </Type>
   </Table>
   <Table Name="dbo.Libraries" Member="Libraries">

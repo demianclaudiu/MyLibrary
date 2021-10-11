@@ -42,6 +42,9 @@ namespace MyLibrary.Models.DBObjects
     partial void InsertBookshelf(Bookshelf instance);
     partial void UpdateBookshelf(Bookshelf instance);
     partial void DeleteBookshelf(Bookshelf instance);
+    partial void InsertCoverImage(CoverImage instance);
+    partial void UpdateCoverImage(CoverImage instance);
+    partial void DeleteCoverImage(CoverImage instance);
     partial void InsertLibrary(Library instance);
     partial void UpdateLibrary(Library instance);
     partial void DeleteLibrary(Library instance);
@@ -109,6 +112,14 @@ namespace MyLibrary.Models.DBObjects
 			get
 			{
 				return this.GetTable<Bookshelf>();
+			}
+		}
+		
+		public System.Data.Linq.Table<CoverImage> CoverImages
+		{
+			get
+			{
+				return this.GetTable<CoverImage>();
 			}
 		}
 		
@@ -686,6 +697,8 @@ namespace MyLibrary.Models.DBObjects
 		
 		private EntitySet<Ownership> _Ownerships;
 		
+		private EntityRef<CoverImage> _CoverImage;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -711,6 +724,7 @@ namespace MyLibrary.Models.DBObjects
 		public Book()
 		{
 			this._Ownerships = new EntitySet<Ownership>(new Action<Ownership>(this.attach_Ownerships), new Action<Ownership>(this.detach_Ownerships));
+			this._CoverImage = default(EntityRef<CoverImage>);
 			OnCreated();
 		}
 		
@@ -825,6 +839,10 @@ namespace MyLibrary.Models.DBObjects
 			{
 				if ((this._CoverImageId != value))
 				{
+					if (this._CoverImage.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnCoverImageIdChanging(value);
 					this.SendPropertyChanging();
 					this._CoverImageId = value;
@@ -884,6 +902,40 @@ namespace MyLibrary.Models.DBObjects
 			set
 			{
 				this._Ownerships.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CoverImage_Book", Storage="_CoverImage", ThisKey="CoverImageId", OtherKey="CoverImageId", IsForeignKey=true)]
+		public CoverImage CoverImage
+		{
+			get
+			{
+				return this._CoverImage.Entity;
+			}
+			set
+			{
+				CoverImage previousValue = this._CoverImage.Entity;
+				if (((previousValue != value) 
+							|| (this._CoverImage.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CoverImage.Entity = null;
+						previousValue.Books.Remove(this);
+					}
+					this._CoverImage.Entity = value;
+					if ((value != null))
+					{
+						value.Books.Add(this);
+						this._CoverImageId = value.CoverImageId;
+					}
+					else
+					{
+						this._CoverImageId = default(Nullable<System.Guid>);
+					}
+					this.SendPropertyChanged("CoverImage");
+				}
 			}
 		}
 		
@@ -1096,6 +1148,144 @@ namespace MyLibrary.Models.DBObjects
 		{
 			this.SendPropertyChanging();
 			entity.Bookshelf = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CoverImages")]
+	public partial class CoverImage : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _CoverImageId;
+		
+		private string _ImageLocation;
+		
+		private bool _IsLocal;
+		
+		private EntitySet<Book> _Books;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnCoverImageIdChanging(System.Guid value);
+    partial void OnCoverImageIdChanged();
+    partial void OnImageLocationChanging(string value);
+    partial void OnImageLocationChanged();
+    partial void OnIsLocalChanging(bool value);
+    partial void OnIsLocalChanged();
+    #endregion
+		
+		public CoverImage()
+		{
+			this._Books = new EntitySet<Book>(new Action<Book>(this.attach_Books), new Action<Book>(this.detach_Books));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CoverImageId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid CoverImageId
+		{
+			get
+			{
+				return this._CoverImageId;
+			}
+			set
+			{
+				if ((this._CoverImageId != value))
+				{
+					this.OnCoverImageIdChanging(value);
+					this.SendPropertyChanging();
+					this._CoverImageId = value;
+					this.SendPropertyChanged("CoverImageId");
+					this.OnCoverImageIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImageLocation", DbType="VarChar(256) NOT NULL", CanBeNull=false)]
+		public string ImageLocation
+		{
+			get
+			{
+				return this._ImageLocation;
+			}
+			set
+			{
+				if ((this._ImageLocation != value))
+				{
+					this.OnImageLocationChanging(value);
+					this.SendPropertyChanging();
+					this._ImageLocation = value;
+					this.SendPropertyChanged("ImageLocation");
+					this.OnImageLocationChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsLocal", DbType="Bit NOT NULL")]
+		public bool IsLocal
+		{
+			get
+			{
+				return this._IsLocal;
+			}
+			set
+			{
+				if ((this._IsLocal != value))
+				{
+					this.OnIsLocalChanging(value);
+					this.SendPropertyChanging();
+					this._IsLocal = value;
+					this.SendPropertyChanged("IsLocal");
+					this.OnIsLocalChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CoverImage_Book", Storage="_Books", ThisKey="CoverImageId", OtherKey="CoverImageId")]
+		public EntitySet<Book> Books
+		{
+			get
+			{
+				return this._Books;
+			}
+			set
+			{
+				this._Books.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Books(Book entity)
+		{
+			this.SendPropertyChanging();
+			entity.CoverImage = this;
+		}
+		
+		private void detach_Books(Book entity)
+		{
+			this.SendPropertyChanging();
+			entity.CoverImage = null;
 		}
 	}
 	
