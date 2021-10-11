@@ -1,20 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="MyLibrary" Class="MyLibraryModelsDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="WebSettings" ConnectionString="Data Source=DEMIANC-LT\SQLEXPRESS;Initial Catalog=MyLibrary;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="MyLibraryConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.AspNetUsers" Member="AspNetUsers">
-    <Type Name="AspNetUser">
-      <Column Name="Id" Type="System.String" DbType="NVarChar(128) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+  <Table Name="dbo.Users" Member="Users">
+    <Type Name="User">
+      <Column Name="UserId" Type="System.String" DbType="NVarChar(128) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Email" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
-      <Column Name="EmailConfirmed" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="PasswordHash" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="SecurityStamp" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="PhoneNumber" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="PhoneNumberConfirmed" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="TwoFactorEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="LockoutEndDateUtc" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="LockoutEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="AccessFailedCount" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="UserName" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" />
-      <Association Name="AspNetUser_Library" Member="Libraries" ThisKey="Id" OtherKey="UserId" Type="Library" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
+      <Association Name="User_Library" Member="Libraries" ThisKey="UserId" OtherKey="UserId" Type="Library" />
     </Type>
   </Table>
   <Table Name="dbo.Shelfs" Member="Shelfs">
@@ -63,7 +54,7 @@
       <Column Name="Description" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
       <Column Name="UserId" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
       <Association Name="Library_Bookshelf" Member="Bookshelfs" ThisKey="LibraryId" OtherKey="LibraryId" Type="Bookshelf" />
-      <Association Name="AspNetUser_Library" Member="AspNetUser" ThisKey="UserId" OtherKey="Id" Type="AspNetUser" IsForeignKey="true" />
+      <Association Name="User_Library" Member="User" ThisKey="UserId" OtherKey="UserId" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Ownerships" Member="Ownerships">

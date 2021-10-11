@@ -30,9 +30,9 @@ namespace MyLibrary.Models.DBObjects
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertAspNetUser(AspNetUser instance);
-    partial void UpdateAspNetUser(AspNetUser instance);
-    partial void DeleteAspNetUser(AspNetUser instance);
+    partial void InsertUser(User instance);
+    partial void UpdateUser(User instance);
+    partial void DeleteUser(User instance);
     partial void InsertShelf(Shelf instance);
     partial void UpdateShelf(Shelf instance);
     partial void DeleteShelf(Shelf instance);
@@ -83,11 +83,11 @@ namespace MyLibrary.Models.DBObjects
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<AspNetUser> AspNetUsers
+		public System.Data.Linq.Table<User> Users
 		{
 			get
 			{
-				return this.GetTable<AspNetUser>();
+				return this.GetTable<User>();
 			}
 		}
 		
@@ -140,35 +140,17 @@ namespace MyLibrary.Models.DBObjects
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AspNetUsers")]
-	public partial class AspNetUser : INotifyPropertyChanging, INotifyPropertyChanged
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Users")]
+	public partial class User : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
-		private string _Id;
+		private string _UserId;
 		
 		private string _Email;
 		
-		private bool _EmailConfirmed;
-		
-		private string _PasswordHash;
-		
-		private string _SecurityStamp;
-		
-		private string _PhoneNumber;
-		
-		private bool _PhoneNumberConfirmed;
-		
-		private bool _TwoFactorEnabled;
-		
-		private System.Nullable<System.DateTime> _LockoutEndDateUtc;
-		
-		private bool _LockoutEnabled;
-		
-		private int _AccessFailedCount;
-		
-		private string _UserName;
+		private string _Name;
 		
 		private EntitySet<Library> _Libraries;
 		
@@ -176,54 +158,36 @@ namespace MyLibrary.Models.DBObjects
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
     partial void OnCreated();
-    partial void OnIdChanging(string value);
-    partial void OnIdChanged();
+    partial void OnUserIdChanging(string value);
+    partial void OnUserIdChanged();
     partial void OnEmailChanging(string value);
     partial void OnEmailChanged();
-    partial void OnEmailConfirmedChanging(bool value);
-    partial void OnEmailConfirmedChanged();
-    partial void OnPasswordHashChanging(string value);
-    partial void OnPasswordHashChanged();
-    partial void OnSecurityStampChanging(string value);
-    partial void OnSecurityStampChanged();
-    partial void OnPhoneNumberChanging(string value);
-    partial void OnPhoneNumberChanged();
-    partial void OnPhoneNumberConfirmedChanging(bool value);
-    partial void OnPhoneNumberConfirmedChanged();
-    partial void OnTwoFactorEnabledChanging(bool value);
-    partial void OnTwoFactorEnabledChanged();
-    partial void OnLockoutEndDateUtcChanging(System.Nullable<System.DateTime> value);
-    partial void OnLockoutEndDateUtcChanged();
-    partial void OnLockoutEnabledChanging(bool value);
-    partial void OnLockoutEnabledChanged();
-    partial void OnAccessFailedCountChanging(int value);
-    partial void OnAccessFailedCountChanged();
-    partial void OnUserNameChanging(string value);
-    partial void OnUserNameChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
     #endregion
 		
-		public AspNetUser()
+		public User()
 		{
 			this._Libraries = new EntitySet<Library>(new Action<Library>(this.attach_Libraries), new Action<Library>(this.detach_Libraries));
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="NVarChar(128) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string Id
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="NVarChar(128) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string UserId
 		{
 			get
 			{
-				return this._Id;
+				return this._UserId;
 			}
 			set
 			{
-				if ((this._Id != value))
+				if ((this._UserId != value))
 				{
-					this.OnIdChanging(value);
+					this.OnUserIdChanging(value);
 					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
 				}
 			}
 		}
@@ -248,207 +212,27 @@ namespace MyLibrary.Models.DBObjects
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailConfirmed", DbType="Bit NOT NULL")]
-		public bool EmailConfirmed
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(256)")]
+		public string Name
 		{
 			get
 			{
-				return this._EmailConfirmed;
+				return this._Name;
 			}
 			set
 			{
-				if ((this._EmailConfirmed != value))
+				if ((this._Name != value))
 				{
-					this.OnEmailConfirmedChanging(value);
+					this.OnNameChanging(value);
 					this.SendPropertyChanging();
-					this._EmailConfirmed = value;
-					this.SendPropertyChanged("EmailConfirmed");
-					this.OnEmailConfirmedChanged();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PasswordHash", DbType="NVarChar(MAX)")]
-		public string PasswordHash
-		{
-			get
-			{
-				return this._PasswordHash;
-			}
-			set
-			{
-				if ((this._PasswordHash != value))
-				{
-					this.OnPasswordHashChanging(value);
-					this.SendPropertyChanging();
-					this._PasswordHash = value;
-					this.SendPropertyChanged("PasswordHash");
-					this.OnPasswordHashChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SecurityStamp", DbType="NVarChar(MAX)")]
-		public string SecurityStamp
-		{
-			get
-			{
-				return this._SecurityStamp;
-			}
-			set
-			{
-				if ((this._SecurityStamp != value))
-				{
-					this.OnSecurityStampChanging(value);
-					this.SendPropertyChanging();
-					this._SecurityStamp = value;
-					this.SendPropertyChanged("SecurityStamp");
-					this.OnSecurityStampChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="NVarChar(MAX)")]
-		public string PhoneNumber
-		{
-			get
-			{
-				return this._PhoneNumber;
-			}
-			set
-			{
-				if ((this._PhoneNumber != value))
-				{
-					this.OnPhoneNumberChanging(value);
-					this.SendPropertyChanging();
-					this._PhoneNumber = value;
-					this.SendPropertyChanged("PhoneNumber");
-					this.OnPhoneNumberChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumberConfirmed", DbType="Bit NOT NULL")]
-		public bool PhoneNumberConfirmed
-		{
-			get
-			{
-				return this._PhoneNumberConfirmed;
-			}
-			set
-			{
-				if ((this._PhoneNumberConfirmed != value))
-				{
-					this.OnPhoneNumberConfirmedChanging(value);
-					this.SendPropertyChanging();
-					this._PhoneNumberConfirmed = value;
-					this.SendPropertyChanged("PhoneNumberConfirmed");
-					this.OnPhoneNumberConfirmedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TwoFactorEnabled", DbType="Bit NOT NULL")]
-		public bool TwoFactorEnabled
-		{
-			get
-			{
-				return this._TwoFactorEnabled;
-			}
-			set
-			{
-				if ((this._TwoFactorEnabled != value))
-				{
-					this.OnTwoFactorEnabledChanging(value);
-					this.SendPropertyChanging();
-					this._TwoFactorEnabled = value;
-					this.SendPropertyChanged("TwoFactorEnabled");
-					this.OnTwoFactorEnabledChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LockoutEndDateUtc", DbType="DateTime")]
-		public System.Nullable<System.DateTime> LockoutEndDateUtc
-		{
-			get
-			{
-				return this._LockoutEndDateUtc;
-			}
-			set
-			{
-				if ((this._LockoutEndDateUtc != value))
-				{
-					this.OnLockoutEndDateUtcChanging(value);
-					this.SendPropertyChanging();
-					this._LockoutEndDateUtc = value;
-					this.SendPropertyChanged("LockoutEndDateUtc");
-					this.OnLockoutEndDateUtcChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LockoutEnabled", DbType="Bit NOT NULL")]
-		public bool LockoutEnabled
-		{
-			get
-			{
-				return this._LockoutEnabled;
-			}
-			set
-			{
-				if ((this._LockoutEnabled != value))
-				{
-					this.OnLockoutEnabledChanging(value);
-					this.SendPropertyChanging();
-					this._LockoutEnabled = value;
-					this.SendPropertyChanged("LockoutEnabled");
-					this.OnLockoutEnabledChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccessFailedCount", DbType="Int NOT NULL")]
-		public int AccessFailedCount
-		{
-			get
-			{
-				return this._AccessFailedCount;
-			}
-			set
-			{
-				if ((this._AccessFailedCount != value))
-				{
-					this.OnAccessFailedCountChanging(value);
-					this.SendPropertyChanging();
-					this._AccessFailedCount = value;
-					this.SendPropertyChanged("AccessFailedCount");
-					this.OnAccessFailedCountChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserName", DbType="NVarChar(256) NOT NULL", CanBeNull=false)]
-		public string UserName
-		{
-			get
-			{
-				return this._UserName;
-			}
-			set
-			{
-				if ((this._UserName != value))
-				{
-					this.OnUserNameChanging(value);
-					this.SendPropertyChanging();
-					this._UserName = value;
-					this.SendPropertyChanged("UserName");
-					this.OnUserNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_Library", Storage="_Libraries", ThisKey="Id", OtherKey="UserId")]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Library", Storage="_Libraries", ThisKey="UserId", OtherKey="UserId")]
 		public EntitySet<Library> Libraries
 		{
 			get
@@ -484,13 +268,13 @@ namespace MyLibrary.Models.DBObjects
 		private void attach_Libraries(Library entity)
 		{
 			this.SendPropertyChanging();
-			entity.AspNetUser = this;
+			entity.User = this;
 		}
 		
 		private void detach_Libraries(Library entity)
 		{
 			this.SendPropertyChanging();
-			entity.AspNetUser = null;
+			entity.User = null;
 		}
 	}
 	
@@ -1303,7 +1087,7 @@ namespace MyLibrary.Models.DBObjects
 		
 		private EntitySet<Bookshelf> _Bookshelfs;
 		
-		private EntityRef<AspNetUser> _AspNetUser;
+		private EntityRef<User> _User;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1320,7 +1104,7 @@ namespace MyLibrary.Models.DBObjects
 		public Library()
 		{
 			this._Bookshelfs = new EntitySet<Bookshelf>(new Action<Bookshelf>(this.attach_Bookshelfs), new Action<Bookshelf>(this.detach_Bookshelfs));
-			this._AspNetUser = default(EntityRef<AspNetUser>);
+			this._User = default(EntityRef<User>);
 			OnCreated();
 		}
 		
@@ -1375,7 +1159,7 @@ namespace MyLibrary.Models.DBObjects
 			{
 				if ((this._UserId != value))
 				{
-					if (this._AspNetUser.HasLoadedOrAssignedValue)
+					if (this._User.HasLoadedOrAssignedValue)
 					{
 						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
 					}
@@ -1401,36 +1185,36 @@ namespace MyLibrary.Models.DBObjects
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_Library", Storage="_AspNetUser", ThisKey="UserId", OtherKey="Id", IsForeignKey=true)]
-		public AspNetUser AspNetUser
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Library", Storage="_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+		public User User
 		{
 			get
 			{
-				return this._AspNetUser.Entity;
+				return this._User.Entity;
 			}
 			set
 			{
-				AspNetUser previousValue = this._AspNetUser.Entity;
+				User previousValue = this._User.Entity;
 				if (((previousValue != value) 
-							|| (this._AspNetUser.HasLoadedOrAssignedValue == false)))
+							|| (this._User.HasLoadedOrAssignedValue == false)))
 				{
 					this.SendPropertyChanging();
 					if ((previousValue != null))
 					{
-						this._AspNetUser.Entity = null;
+						this._User.Entity = null;
 						previousValue.Libraries.Remove(this);
 					}
-					this._AspNetUser.Entity = value;
+					this._User.Entity = value;
 					if ((value != null))
 					{
 						value.Libraries.Add(this);
-						this._UserId = value.Id;
+						this._UserId = value.UserId;
 					}
 					else
 					{
 						this._UserId = default(string);
 					}
-					this.SendPropertyChanged("AspNetUser");
+					this.SendPropertyChanged("User");
 				}
 			}
 		}
