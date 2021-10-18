@@ -30,27 +30,27 @@ namespace MyLibrary.Models.DBObjects
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertUser(User instance);
-    partial void UpdateUser(User instance);
-    partial void DeleteUser(User instance);
     partial void InsertShelf(Shelf instance);
     partial void UpdateShelf(Shelf instance);
     partial void DeleteShelf(Shelf instance);
-    partial void InsertBook(Book instance);
-    partial void UpdateBook(Book instance);
-    partial void DeleteBook(Book instance);
     partial void InsertBookshelf(Bookshelf instance);
     partial void UpdateBookshelf(Bookshelf instance);
     partial void DeleteBookshelf(Bookshelf instance);
     partial void InsertCoverImage(CoverImage instance);
     partial void UpdateCoverImage(CoverImage instance);
     partial void DeleteCoverImage(CoverImage instance);
-    partial void InsertLibrary(Library instance);
-    partial void UpdateLibrary(Library instance);
-    partial void DeleteLibrary(Library instance);
     partial void InsertOwnership(Ownership instance);
     partial void UpdateOwnership(Ownership instance);
     partial void DeleteOwnership(Ownership instance);
+    partial void InsertUser(User instance);
+    partial void UpdateUser(User instance);
+    partial void DeleteUser(User instance);
+    partial void InsertLibrary(Library instance);
+    partial void UpdateLibrary(Library instance);
+    partial void DeleteLibrary(Library instance);
+    partial void InsertBook(Book instance);
+    partial void UpdateBook(Book instance);
+    partial void DeleteBook(Book instance);
     #endregion
 		
 		public MyLibraryModelsDataContext() : 
@@ -83,27 +83,11 @@ namespace MyLibrary.Models.DBObjects
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<User> Users
-		{
-			get
-			{
-				return this.GetTable<User>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Shelf> Shelfs
 		{
 			get
 			{
 				return this.GetTable<Shelf>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Book> Books
-		{
-			get
-			{
-				return this.GetTable<Book>();
 			}
 		}
 		
@@ -123,6 +107,22 @@ namespace MyLibrary.Models.DBObjects
 			}
 		}
 		
+		public System.Data.Linq.Table<Ownership> Ownerships
+		{
+			get
+			{
+				return this.GetTable<Ownership>();
+			}
+		}
+		
+		public System.Data.Linq.Table<User> Users
+		{
+			get
+			{
+				return this.GetTable<User>();
+			}
+		}
+		
 		public System.Data.Linq.Table<Library> Libraries
 		{
 			get
@@ -131,150 +131,12 @@ namespace MyLibrary.Models.DBObjects
 			}
 		}
 		
-		public System.Data.Linq.Table<Ownership> Ownerships
+		public System.Data.Linq.Table<Book> Books
 		{
 			get
 			{
-				return this.GetTable<Ownership>();
+				return this.GetTable<Book>();
 			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Users")]
-	public partial class User : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private string _UserId;
-		
-		private string _Email;
-		
-		private string _Name;
-		
-		private EntitySet<Library> _Libraries;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnUserIdChanging(string value);
-    partial void OnUserIdChanged();
-    partial void OnEmailChanging(string value);
-    partial void OnEmailChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    #endregion
-		
-		public User()
-		{
-			this._Libraries = new EntitySet<Library>(new Action<Library>(this.attach_Libraries), new Action<Library>(this.detach_Libraries));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="NVarChar(128) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
-		public string UserId
-		{
-			get
-			{
-				return this._UserId;
-			}
-			set
-			{
-				if ((this._UserId != value))
-				{
-					this.OnUserIdChanging(value);
-					this.SendPropertyChanging();
-					this._UserId = value;
-					this.SendPropertyChanged("UserId");
-					this.OnUserIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="NVarChar(256)")]
-		public string Email
-		{
-			get
-			{
-				return this._Email;
-			}
-			set
-			{
-				if ((this._Email != value))
-				{
-					this.OnEmailChanging(value);
-					this.SendPropertyChanging();
-					this._Email = value;
-					this.SendPropertyChanged("Email");
-					this.OnEmailChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(256)")]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Library", Storage="_Libraries", ThisKey="UserId", OtherKey="UserId")]
-		public EntitySet<Library> Libraries
-		{
-			get
-			{
-				return this._Libraries;
-			}
-			set
-			{
-				this._Libraries.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Libraries(Library entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = this;
-		}
-		
-		private void detach_Libraries(Library entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = null;
 		}
 	}
 	
@@ -454,305 +316,6 @@ namespace MyLibrary.Models.DBObjects
 		{
 			this.SendPropertyChanging();
 			entity.Shelf = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Books")]
-	public partial class Book : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private System.Guid _BookId;
-		
-		private string _ISBN;
-		
-		private string _Title;
-		
-		private string _Author;
-		
-		private string _Description;
-		
-		private System.Nullable<System.Guid> _CoverImageId;
-		
-		private System.Nullable<int> _YearPublished;
-		
-		private string _Publisher;
-		
-		private EntitySet<Ownership> _Ownerships;
-		
-		private EntityRef<CoverImage> _CoverImage;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnBookIdChanging(System.Guid value);
-    partial void OnBookIdChanged();
-    partial void OnISBNChanging(string value);
-    partial void OnISBNChanged();
-    partial void OnTitleChanging(string value);
-    partial void OnTitleChanged();
-    partial void OnAuthorChanging(string value);
-    partial void OnAuthorChanged();
-    partial void OnDescriptionChanging(string value);
-    partial void OnDescriptionChanged();
-    partial void OnCoverImageIdChanging(System.Nullable<System.Guid> value);
-    partial void OnCoverImageIdChanged();
-    partial void OnYearPublishedChanging(System.Nullable<int> value);
-    partial void OnYearPublishedChanged();
-    partial void OnPublisherChanging(string value);
-    partial void OnPublisherChanged();
-    #endregion
-		
-		public Book()
-		{
-			this._Ownerships = new EntitySet<Ownership>(new Action<Ownership>(this.attach_Ownerships), new Action<Ownership>(this.detach_Ownerships));
-			this._CoverImage = default(EntityRef<CoverImage>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BookId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-		public System.Guid BookId
-		{
-			get
-			{
-				return this._BookId;
-			}
-			set
-			{
-				if ((this._BookId != value))
-				{
-					this.OnBookIdChanging(value);
-					this.SendPropertyChanging();
-					this._BookId = value;
-					this.SendPropertyChanged("BookId");
-					this.OnBookIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ISBN", DbType="VarChar(13)")]
-		public string ISBN
-		{
-			get
-			{
-				return this._ISBN;
-			}
-			set
-			{
-				if ((this._ISBN != value))
-				{
-					this.OnISBNChanging(value);
-					this.SendPropertyChanging();
-					this._ISBN = value;
-					this.SendPropertyChanged("ISBN");
-					this.OnISBNChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string Title
-		{
-			get
-			{
-				return this._Title;
-			}
-			set
-			{
-				if ((this._Title != value))
-				{
-					this.OnTitleChanging(value);
-					this.SendPropertyChanging();
-					this._Title = value;
-					this.SendPropertyChanged("Title");
-					this.OnTitleChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Author", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string Author
-		{
-			get
-			{
-				return this._Author;
-			}
-			set
-			{
-				if ((this._Author != value))
-				{
-					this.OnAuthorChanging(value);
-					this.SendPropertyChanging();
-					this._Author = value;
-					this.SendPropertyChanged("Author");
-					this.OnAuthorChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
-		public string Description
-		{
-			get
-			{
-				return this._Description;
-			}
-			set
-			{
-				if ((this._Description != value))
-				{
-					this.OnDescriptionChanging(value);
-					this.SendPropertyChanging();
-					this._Description = value;
-					this.SendPropertyChanged("Description");
-					this.OnDescriptionChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CoverImageId", DbType="UniqueIdentifier")]
-		public System.Nullable<System.Guid> CoverImageId
-		{
-			get
-			{
-				return this._CoverImageId;
-			}
-			set
-			{
-				if ((this._CoverImageId != value))
-				{
-					if (this._CoverImage.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnCoverImageIdChanging(value);
-					this.SendPropertyChanging();
-					this._CoverImageId = value;
-					this.SendPropertyChanged("CoverImageId");
-					this.OnCoverImageIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YearPublished", DbType="Int")]
-		public System.Nullable<int> YearPublished
-		{
-			get
-			{
-				return this._YearPublished;
-			}
-			set
-			{
-				if ((this._YearPublished != value))
-				{
-					this.OnYearPublishedChanging(value);
-					this.SendPropertyChanging();
-					this._YearPublished = value;
-					this.SendPropertyChanged("YearPublished");
-					this.OnYearPublishedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Publisher", DbType="VarChar(200)")]
-		public string Publisher
-		{
-			get
-			{
-				return this._Publisher;
-			}
-			set
-			{
-				if ((this._Publisher != value))
-				{
-					this.OnPublisherChanging(value);
-					this.SendPropertyChanging();
-					this._Publisher = value;
-					this.SendPropertyChanged("Publisher");
-					this.OnPublisherChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Book_Ownership", Storage="_Ownerships", ThisKey="BookId", OtherKey="BookId")]
-		public EntitySet<Ownership> Ownerships
-		{
-			get
-			{
-				return this._Ownerships;
-			}
-			set
-			{
-				this._Ownerships.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CoverImage_Book", Storage="_CoverImage", ThisKey="CoverImageId", OtherKey="CoverImageId", IsForeignKey=true)]
-		public CoverImage CoverImage
-		{
-			get
-			{
-				return this._CoverImage.Entity;
-			}
-			set
-			{
-				CoverImage previousValue = this._CoverImage.Entity;
-				if (((previousValue != value) 
-							|| (this._CoverImage.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._CoverImage.Entity = null;
-						previousValue.Books.Remove(this);
-					}
-					this._CoverImage.Entity = value;
-					if ((value != null))
-					{
-						value.Books.Add(this);
-						this._CoverImageId = value.CoverImageId;
-					}
-					else
-					{
-						this._CoverImageId = default(Nullable<System.Guid>);
-					}
-					this.SendPropertyChanged("CoverImage");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Ownerships(Ownership entity)
-		{
-			this.SendPropertyChanging();
-			entity.Book = this;
-		}
-		
-		private void detach_Ownerships(Ownership entity)
-		{
-			this.SendPropertyChanging();
-			entity.Book = null;
 		}
 	}
 	
@@ -1073,185 +636,6 @@ namespace MyLibrary.Models.DBObjects
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Libraries")]
-	public partial class Library : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private System.Guid _LibraryId;
-		
-		private string _Description;
-		
-		private string _UserId;
-		
-		private EntitySet<Bookshelf> _Bookshelfs;
-		
-		private EntityRef<User> _User;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnLibraryIdChanging(System.Guid value);
-    partial void OnLibraryIdChanged();
-    partial void OnDescriptionChanging(string value);
-    partial void OnDescriptionChanged();
-    partial void OnUserIdChanging(string value);
-    partial void OnUserIdChanged();
-    #endregion
-		
-		public Library()
-		{
-			this._Bookshelfs = new EntitySet<Bookshelf>(new Action<Bookshelf>(this.attach_Bookshelfs), new Action<Bookshelf>(this.detach_Bookshelfs));
-			this._User = default(EntityRef<User>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LibraryId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-		public System.Guid LibraryId
-		{
-			get
-			{
-				return this._LibraryId;
-			}
-			set
-			{
-				if ((this._LibraryId != value))
-				{
-					this.OnLibraryIdChanging(value);
-					this.SendPropertyChanging();
-					this._LibraryId = value;
-					this.SendPropertyChanged("LibraryId");
-					this.OnLibraryIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(250) NOT NULL", CanBeNull=false)]
-		public string Description
-		{
-			get
-			{
-				return this._Description;
-			}
-			set
-			{
-				if ((this._Description != value))
-				{
-					this.OnDescriptionChanging(value);
-					this.SendPropertyChanging();
-					this._Description = value;
-					this.SendPropertyChanged("Description");
-					this.OnDescriptionChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="NVarChar(128) NOT NULL", CanBeNull=false)]
-		public string UserId
-		{
-			get
-			{
-				return this._UserId;
-			}
-			set
-			{
-				if ((this._UserId != value))
-				{
-					if (this._User.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnUserIdChanging(value);
-					this.SendPropertyChanging();
-					this._UserId = value;
-					this.SendPropertyChanged("UserId");
-					this.OnUserIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Library_Bookshelf", Storage="_Bookshelfs", ThisKey="LibraryId", OtherKey="LibraryId")]
-		public EntitySet<Bookshelf> Bookshelfs
-		{
-			get
-			{
-				return this._Bookshelfs;
-			}
-			set
-			{
-				this._Bookshelfs.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Library", Storage="_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
-		public User User
-		{
-			get
-			{
-				return this._User.Entity;
-			}
-			set
-			{
-				User previousValue = this._User.Entity;
-				if (((previousValue != value) 
-							|| (this._User.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._User.Entity = null;
-						previousValue.Libraries.Remove(this);
-					}
-					this._User.Entity = value;
-					if ((value != null))
-					{
-						value.Libraries.Add(this);
-						this._UserId = value.UserId;
-					}
-					else
-					{
-						this._UserId = default(string);
-					}
-					this.SendPropertyChanged("User");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Bookshelfs(Bookshelf entity)
-		{
-			this.SendPropertyChanging();
-			entity.Library = this;
-		}
-		
-		private void detach_Bookshelfs(Bookshelf entity)
-		{
-			this.SendPropertyChanging();
-			entity.Library = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Ownerships")]
 	public partial class Ownership : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -1268,9 +652,9 @@ namespace MyLibrary.Models.DBObjects
 		
 		private System.Nullable<int> _BookmarkedPage;
 		
-		private EntityRef<Book> _Book;
-		
 		private EntityRef<Shelf> _Shelf;
+		
+		private EntityRef<Book> _Book;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -1290,8 +674,8 @@ namespace MyLibrary.Models.DBObjects
 		
 		public Ownership()
 		{
-			this._Book = default(EntityRef<Book>);
 			this._Shelf = default(EntityRef<Shelf>);
+			this._Book = default(EntityRef<Book>);
 			OnCreated();
 		}
 		
@@ -1403,40 +787,6 @@ namespace MyLibrary.Models.DBObjects
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Book_Ownership", Storage="_Book", ThisKey="BookId", OtherKey="BookId", IsForeignKey=true)]
-		public Book Book
-		{
-			get
-			{
-				return this._Book.Entity;
-			}
-			set
-			{
-				Book previousValue = this._Book.Entity;
-				if (((previousValue != value) 
-							|| (this._Book.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Book.Entity = null;
-						previousValue.Ownerships.Remove(this);
-					}
-					this._Book.Entity = value;
-					if ((value != null))
-					{
-						value.Ownerships.Add(this);
-						this._BookId = value.BookId;
-					}
-					else
-					{
-						this._BookId = default(System.Guid);
-					}
-					this.SendPropertyChanged("Book");
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Shelf_Ownership", Storage="_Shelf", ThisKey="ShelfId", OtherKey="ShelfId", IsForeignKey=true)]
 		public Shelf Shelf
 		{
@@ -1471,6 +821,40 @@ namespace MyLibrary.Models.DBObjects
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Book_Ownership", Storage="_Book", ThisKey="BookId", OtherKey="BookId", IsForeignKey=true)]
+		public Book Book
+		{
+			get
+			{
+				return this._Book.Entity;
+			}
+			set
+			{
+				Book previousValue = this._Book.Entity;
+				if (((previousValue != value) 
+							|| (this._Book.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Book.Entity = null;
+						previousValue.Ownerships.Remove(this);
+					}
+					this._Book.Entity = value;
+					if ((value != null))
+					{
+						value.Ownerships.Add(this);
+						this._BookId = value.BookId;
+					}
+					else
+					{
+						this._BookId = default(System.Guid);
+					}
+					this.SendPropertyChanged("Book");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1489,6 +873,646 @@ namespace MyLibrary.Models.DBObjects
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Users")]
+	public partial class User : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _UserId;
+		
+		private string _Email;
+		
+		private string _Name;
+		
+		private EntitySet<Library> _Libraries;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnEmailChanging(string value);
+    partial void OnEmailChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    #endregion
+		
+		public User()
+		{
+			this._Libraries = new EntitySet<Library>(new Action<Library>(this.attach_Libraries), new Action<Library>(this.detach_Libraries));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					this.OnUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="NVarChar(256)")]
+		public string Email
+		{
+			get
+			{
+				return this._Email;
+			}
+			set
+			{
+				if ((this._Email != value))
+				{
+					this.OnEmailChanging(value);
+					this.SendPropertyChanging();
+					this._Email = value;
+					this.SendPropertyChanged("Email");
+					this.OnEmailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(256)")]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Library", Storage="_Libraries", ThisKey="UserId", OtherKey="UserId")]
+		public EntitySet<Library> Libraries
+		{
+			get
+			{
+				return this._Libraries;
+			}
+			set
+			{
+				this._Libraries.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Libraries(Library entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_Libraries(Library entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Libraries")]
+	public partial class Library : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _LibraryId;
+		
+		private string _Description;
+		
+		private System.Guid _UserId;
+		
+		private EntitySet<Bookshelf> _Bookshelfs;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnLibraryIdChanging(System.Guid value);
+    partial void OnLibraryIdChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    #endregion
+		
+		public Library()
+		{
+			this._Bookshelfs = new EntitySet<Bookshelf>(new Action<Bookshelf>(this.attach_Bookshelfs), new Action<Bookshelf>(this.detach_Bookshelfs));
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LibraryId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid LibraryId
+		{
+			get
+			{
+				return this._LibraryId;
+			}
+			set
+			{
+				if ((this._LibraryId != value))
+				{
+					this.OnLibraryIdChanging(value);
+					this.SendPropertyChanging();
+					this._LibraryId = value;
+					this.SendPropertyChanged("LibraryId");
+					this.OnLibraryIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(250) NOT NULL", CanBeNull=false)]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this.OnDescriptionChanging(value);
+					this.SendPropertyChanging();
+					this._Description = value;
+					this.SendPropertyChanged("Description");
+					this.OnDescriptionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+		public System.Guid UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Library_Bookshelf", Storage="_Bookshelfs", ThisKey="LibraryId", OtherKey="LibraryId")]
+		public EntitySet<Bookshelf> Bookshelfs
+		{
+			get
+			{
+				return this._Bookshelfs;
+			}
+			set
+			{
+				this._Bookshelfs.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Library", Storage="_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.Libraries.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.Libraries.Add(this);
+						this._UserId = value.UserId;
+					}
+					else
+					{
+						this._UserId = default(System.Guid);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Bookshelfs(Bookshelf entity)
+		{
+			this.SendPropertyChanging();
+			entity.Library = this;
+		}
+		
+		private void detach_Bookshelfs(Bookshelf entity)
+		{
+			this.SendPropertyChanging();
+			entity.Library = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Books")]
+	public partial class Book : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _BookId;
+		
+		private string _ISBN;
+		
+		private string _Title;
+		
+		private string _Author;
+		
+		private string _Description;
+		
+		private System.Nullable<System.Guid> _CoverImageId;
+		
+		private System.Nullable<int> _YearPublished;
+		
+		private string _Publisher;
+		
+		private string _Genre;
+		
+		private EntitySet<Ownership> _Ownerships;
+		
+		private EntityRef<CoverImage> _CoverImage;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnBookIdChanging(System.Guid value);
+    partial void OnBookIdChanged();
+    partial void OnISBNChanging(string value);
+    partial void OnISBNChanged();
+    partial void OnTitleChanging(string value);
+    partial void OnTitleChanged();
+    partial void OnAuthorChanging(string value);
+    partial void OnAuthorChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnCoverImageIdChanging(System.Nullable<System.Guid> value);
+    partial void OnCoverImageIdChanged();
+    partial void OnYearPublishedChanging(System.Nullable<int> value);
+    partial void OnYearPublishedChanged();
+    partial void OnPublisherChanging(string value);
+    partial void OnPublisherChanged();
+    partial void OnGenreChanging(string value);
+    partial void OnGenreChanged();
+    #endregion
+		
+		public Book()
+		{
+			this._Ownerships = new EntitySet<Ownership>(new Action<Ownership>(this.attach_Ownerships), new Action<Ownership>(this.detach_Ownerships));
+			this._CoverImage = default(EntityRef<CoverImage>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BookId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid BookId
+		{
+			get
+			{
+				return this._BookId;
+			}
+			set
+			{
+				if ((this._BookId != value))
+				{
+					this.OnBookIdChanging(value);
+					this.SendPropertyChanging();
+					this._BookId = value;
+					this.SendPropertyChanged("BookId");
+					this.OnBookIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ISBN", DbType="VarChar(13)")]
+		public string ISBN
+		{
+			get
+			{
+				return this._ISBN;
+			}
+			set
+			{
+				if ((this._ISBN != value))
+				{
+					this.OnISBNChanging(value);
+					this.SendPropertyChanging();
+					this._ISBN = value;
+					this.SendPropertyChanged("ISBN");
+					this.OnISBNChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string Title
+		{
+			get
+			{
+				return this._Title;
+			}
+			set
+			{
+				if ((this._Title != value))
+				{
+					this.OnTitleChanging(value);
+					this.SendPropertyChanging();
+					this._Title = value;
+					this.SendPropertyChanged("Title");
+					this.OnTitleChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Author", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string Author
+		{
+			get
+			{
+				return this._Author;
+			}
+			set
+			{
+				if ((this._Author != value))
+				{
+					this.OnAuthorChanging(value);
+					this.SendPropertyChanging();
+					this._Author = value;
+					this.SendPropertyChanged("Author");
+					this.OnAuthorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this.OnDescriptionChanging(value);
+					this.SendPropertyChanging();
+					this._Description = value;
+					this.SendPropertyChanged("Description");
+					this.OnDescriptionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CoverImageId", DbType="UniqueIdentifier")]
+		public System.Nullable<System.Guid> CoverImageId
+		{
+			get
+			{
+				return this._CoverImageId;
+			}
+			set
+			{
+				if ((this._CoverImageId != value))
+				{
+					if (this._CoverImage.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCoverImageIdChanging(value);
+					this.SendPropertyChanging();
+					this._CoverImageId = value;
+					this.SendPropertyChanged("CoverImageId");
+					this.OnCoverImageIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YearPublished", DbType="Int")]
+		public System.Nullable<int> YearPublished
+		{
+			get
+			{
+				return this._YearPublished;
+			}
+			set
+			{
+				if ((this._YearPublished != value))
+				{
+					this.OnYearPublishedChanging(value);
+					this.SendPropertyChanging();
+					this._YearPublished = value;
+					this.SendPropertyChanged("YearPublished");
+					this.OnYearPublishedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Publisher", DbType="VarChar(200)")]
+		public string Publisher
+		{
+			get
+			{
+				return this._Publisher;
+			}
+			set
+			{
+				if ((this._Publisher != value))
+				{
+					this.OnPublisherChanging(value);
+					this.SendPropertyChanging();
+					this._Publisher = value;
+					this.SendPropertyChanged("Publisher");
+					this.OnPublisherChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Genre", DbType="VarChar(200)")]
+		public string Genre
+		{
+			get
+			{
+				return this._Genre;
+			}
+			set
+			{
+				if ((this._Genre != value))
+				{
+					this.OnGenreChanging(value);
+					this.SendPropertyChanging();
+					this._Genre = value;
+					this.SendPropertyChanged("Genre");
+					this.OnGenreChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Book_Ownership", Storage="_Ownerships", ThisKey="BookId", OtherKey="BookId")]
+		public EntitySet<Ownership> Ownerships
+		{
+			get
+			{
+				return this._Ownerships;
+			}
+			set
+			{
+				this._Ownerships.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CoverImage_Book", Storage="_CoverImage", ThisKey="CoverImageId", OtherKey="CoverImageId", IsForeignKey=true)]
+		public CoverImage CoverImage
+		{
+			get
+			{
+				return this._CoverImage.Entity;
+			}
+			set
+			{
+				CoverImage previousValue = this._CoverImage.Entity;
+				if (((previousValue != value) 
+							|| (this._CoverImage.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CoverImage.Entity = null;
+						previousValue.Books.Remove(this);
+					}
+					this._CoverImage.Entity = value;
+					if ((value != null))
+					{
+						value.Books.Add(this);
+						this._CoverImageId = value.CoverImageId;
+					}
+					else
+					{
+						this._CoverImageId = default(Nullable<System.Guid>);
+					}
+					this.SendPropertyChanged("CoverImage");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Ownerships(Ownership entity)
+		{
+			this.SendPropertyChanging();
+			entity.Book = this;
+		}
+		
+		private void detach_Ownerships(Ownership entity)
+		{
+			this.SendPropertyChanging();
+			entity.Book = null;
 		}
 	}
 }

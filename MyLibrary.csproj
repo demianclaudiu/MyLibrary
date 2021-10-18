@@ -175,14 +175,28 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BookModel.cs" />
+    <Compile Include="Models\BookshelfModel.cs" />
+    <Compile Include="Models\CoverImageModel.cs" />
     <Compile Include="Models\DBObjects\MyLibraryModels.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MyLibraryModels.dbml</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LibraryModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\OwnershipModel.cs" />
+    <Compile Include="Models\ShelfModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\BookRepository.cs" />
+    <Compile Include="Repository\BookshelfRepository.cs" />
+    <Compile Include="Repository\CoverImageRepository.cs" />
+    <Compile Include="Repository\LibraryRepository.cs" />
+    <Compile Include="Repository\OwnershipRepository.cs" />
+    <Compile Include="Repository\ShelfRepository.cs" />
+    <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

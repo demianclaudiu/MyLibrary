@@ -1,13 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="MyLibrary" Class="MyLibraryModelsDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="WebSettings" ConnectionString="Data Source=DEMIANC-LT\SQLEXPRESS;Initial Catalog=MyLibrary;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="MyLibraryConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.Users" Member="Users">
-    <Type Name="User">
-      <Column Name="UserId" Type="System.String" DbType="NVarChar(128) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Email" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
-      <Column Name="Name" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
-      <Association Name="User_Library" Member="Libraries" ThisKey="UserId" OtherKey="UserId" Type="Library" />
-    </Type>
-  </Table>
   <Table Name="dbo.Shelfs" Member="Shelfs">
     <Type Name="Shelf">
       <Column Name="ShelfId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -15,20 +7,6 @@
       <Column Name="BookshelfId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Association Name="Shelf_Ownership" Member="Ownerships" ThisKey="ShelfId" OtherKey="ShelfId" Type="Ownership" />
       <Association Name="Bookshelf_Shelf" Member="Bookshelf" ThisKey="BookshelfId" OtherKey="BookshelfId" Type="Bookshelf" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Books" Member="Books">
-    <Type Name="Book">
-      <Column Name="BookId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="ISBN" Type="System.String" DbType="VarChar(13)" CanBeNull="true" />
-      <Column Name="Title" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="Author" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="CoverImageId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="YearPublished" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Publisher" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Association Name="Book_Ownership" Member="Ownerships" ThisKey="BookId" OtherKey="BookId" Type="Ownership" />
-      <Association Name="CoverImage_Book" Member="CoverImage" ThisKey="CoverImageId" OtherKey="CoverImageId" Type="CoverImage" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Bookshelfs" Member="Bookshelfs">
@@ -48,15 +26,6 @@
       <Association Name="CoverImage_Book" Member="Books" ThisKey="CoverImageId" OtherKey="CoverImageId" Type="Book" />
     </Type>
   </Table>
-  <Table Name="dbo.Libraries" Member="Libraries">
-    <Type Name="Library">
-      <Column Name="LibraryId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
-      <Column Name="UserId" Type="System.String" DbType="NVarChar(128) NOT NULL" CanBeNull="false" />
-      <Association Name="Library_Bookshelf" Member="Bookshelfs" ThisKey="LibraryId" OtherKey="LibraryId" Type="Bookshelf" />
-      <Association Name="User_Library" Member="User" ThisKey="UserId" OtherKey="UserId" Type="User" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Ownerships" Member="Ownerships">
     <Type Name="Ownership">
       <Column Name="OwnershipId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -64,8 +33,40 @@
       <Column Name="ShelfId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="IsRead" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="BookmarkedPage" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Book_Ownership" Member="Book" ThisKey="BookId" OtherKey="BookId" Type="Book" IsForeignKey="true" />
       <Association Name="Shelf_Ownership" Member="Shelf" ThisKey="ShelfId" OtherKey="ShelfId" Type="Shelf" IsForeignKey="true" />
+      <Association Name="Book_Ownership" Member="Book" ThisKey="BookId" OtherKey="BookId" Type="Book" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Users" Member="Users">
+    <Type Name="User">
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(256)" CanBeNull="true" />
+      <Association Name="User_Library" Member="Libraries" ThisKey="UserId" OtherKey="UserId" Type="Library" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Libraries" Member="Libraries">
+    <Type Name="Library">
+      <Column Name="LibraryId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Association Name="Library_Bookshelf" Member="Bookshelfs" ThisKey="LibraryId" OtherKey="LibraryId" Type="Bookshelf" />
+      <Association Name="User_Library" Member="User" ThisKey="UserId" OtherKey="UserId" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Books" Member="Books">
+    <Type Name="Book">
+      <Column Name="BookId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ISBN" Type="System.String" DbType="VarChar(13)" CanBeNull="true" />
+      <Column Name="Title" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Author" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="CoverImageId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="YearPublished" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Publisher" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Genre" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Association Name="Book_Ownership" Member="Ownerships" ThisKey="BookId" OtherKey="BookId" Type="Ownership" />
+      <Association Name="CoverImage_Book" Member="CoverImage" ThisKey="CoverImageId" OtherKey="CoverImageId" Type="CoverImage" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>
