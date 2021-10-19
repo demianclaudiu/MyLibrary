@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MyLibrary.Models;
+using MyLibrary.Repository;
 
 namespace MyLibrary.Controllers
 {
@@ -17,6 +18,8 @@ namespace MyLibrary.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+
+        private UserRepository userRepository = new UserRepository();
 
         public AccountController()
         {
@@ -152,11 +155,22 @@ namespace MyLibrary.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+
+                UserModel userModel = new UserModel
+                {
+                    UserId = Guid.NewGuid(),
+                    Email = model.Email,
+                    Name = "New Librarian"
+                };
+
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    await UserManager.AddToRoleAsync(user.Id, "User");
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
+                    userRepository.InsertUser(userModel);
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

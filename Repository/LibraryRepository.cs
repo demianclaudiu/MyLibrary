@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using MyLibrary.ViewModel;
 
 namespace MyLibrary.Repository
 {
@@ -47,6 +48,39 @@ namespace MyLibrary.Repository
                 .FirstOrDefault(x => x.LibraryId == libraryId));
         }
 
+        public List<LibraryViewModel> GetAllLibraryViewModelByUserId(Guid userId)
+        {
+            List<LibraryViewModel> libraryViewModels = new List<LibraryViewModel>();
+            foreach (Library dbLibrary in dbContext.Libraries.Where(x=>x.UserId == userId))
+            {
+                LibraryViewModel libraryViewModel = new LibraryViewModel();
+                libraryViewModel.LibraryId = dbLibrary.LibraryId;
+                libraryViewModel.LibraryDescription = dbLibrary.Description;
+
+                List<BookshelfModel> bookshelves = new List<BookshelfModel>();
+                Dictionary<Guid, List<ShelfModel>> bookshelfShelves = new Dictionary<Guid, List<ShelfModel>>();
+                foreach (Bookshelf dbBookshelf in dbLibrary.Bookshelfs)
+                {
+                    BookshelfModel bookshelfModel = new BookshelfModel();
+                    bookshelfModel.BookshelfId = dbBookshelf.BookshelfId;
+                    bookshelfModel.Description = dbBookshelf.Description;
+                    bookshelves.Add(bookshelfModel);
+
+                    List<ShelfModel> shelves = new List<ShelfModel>();
+                    foreach (Shelf dbShelf in dbBookshelf.Shelfs)
+                    {
+                        ShelfModel shelfModel = new ShelfModel();
+                        shelfModel.ShelfId = dbShelf.ShelfId;
+                        shelfModel.Description = dbShelf.Description;
+                        shelves.Add(shelfModel);
+                    }
+                    bookshelfShelves.Add(bookshelfModel.BookshelfId, shelves);
+
+                }
+            }
+            return libraryViewModels;
+        }
+
         public void InsertLibrary(LibraryModel libraryModel)
         {
             libraryModel.LibraryId = Guid.NewGuid();
@@ -79,12 +113,30 @@ namespace MyLibrary.Repository
 
         private Library MapModelToDBOject(LibraryModel libraryModel)
         {
-            throw new NotImplementedException();
+            if (libraryModel != null)
+            {
+                return new Library
+                {
+                    LibraryId = libraryModel.LibraryId,
+                    Description = libraryModel.Description,
+                    UserId = libraryModel.UserId
+                };
+            }
+            return null;
         }
 
         private LibraryModel MapDBObjectToModel(Library dbLibrary)
         {
-            throw new NotImplementedException();
+            if (dbLibrary != null)
+            {
+                return new LibraryModel
+                {
+                    LibraryId = dbLibrary.LibraryId,
+                    Description = dbLibrary.Description,
+                    UserId = dbLibrary.UserId
+                };
+            }
+            return null;
         }
     }
 }

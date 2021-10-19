@@ -13,9 +13,11 @@ namespace MyLibrary.Models
         public string Author { get; set; }
         public string Description { get; set; }
         public Guid CoverImageId { get; set; }
-        public int? YarPublished { get; set; }
+        public int? YearPublished { get; set; }
         public string Publisher { get; set; }
         public string Genre { get; set; }
+        public string CoverImageLocation { get; set; }
+        public bool? IsCoverImageLocal { get; set; }
 
     }
 }

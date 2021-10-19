@@ -109,10 +109,11 @@ namespace MyLibrary.Repository
                 dbBook.Title = bookModel.Title;
                 dbBook.Author = bookModel.Author;
                 dbBook.Description = bookModel.Description;
-                dbBook.CoverImageId = bookModel.CoverImageId;
-                dbBook.YearPublished = bookModel.YarPublished;
+                dbBook.YearPublished = bookModel.YearPublished;
                 dbBook.Publisher = bookModel.Publisher;
                 dbBook.Genre = bookModel.Genre;
+                dbBook.CoverImageLocation = bookModel.CoverImageLocation;
+                dbBook.IsCoverImageLocal = bookModel.IsCoverImageLocal;
                 dbContext.SubmitChanges();
             }
         }
@@ -129,12 +130,44 @@ namespace MyLibrary.Repository
 
         private Book MapModelToDBContext(BookModel bookModel)
         {
-            throw new NotImplementedException();
+            if (bookModel != null)
+            {
+                return new Book
+                {
+                    BookId = bookModel.BookId,
+                    ISBN = bookModel.ISBN,
+                    Title = bookModel.Author,
+                    Author = bookModel.Author,
+                    Description = bookModel.Description,
+                    YearPublished = bookModel.YearPublished,
+                    Publisher = bookModel.Publisher,
+                    Genre = bookModel.Genre,
+                    CoverImageLocation = bookModel.CoverImageLocation,
+                    IsCoverImageLocal = bookModel.IsCoverImageLocal
+                };
+            }
+            return null;
         }
 
         private BookModel MapDBObjectToModel(Book dbBook)
         {
-            throw new NotImplementedException();
+            if (dbBook != null)
+            {
+                return new BookModel
+                {
+                    BookId = dbBook.BookId,
+                    ISBN = dbBook.ISBN,
+                    Title = dbBook.Title,
+                    Author = dbBook.Author,
+                    Description = dbBook.Description,
+                    YearPublished = dbBook.YearPublished,
+                    Publisher = dbBook.Publisher,
+                    Genre = dbBook.Genre,
+                    CoverImageLocation = dbBook.CoverImageLocation,
+                    IsCoverImageLocal = dbBook.IsCoverImageLocal
+                };
+            }
+            return null;
         }
     }
 }
