@@ -1,0 +1,46 @@
+﻿@model IEnumerable<MyLibrary.ViewModel.BookshelfStatsViewModel>
+
+@{
+    ViewBag.Title = "Your Bookshelves";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Your Bookshelves</h2>
+
+<p>
+    @Html.ActionLink("Add", "Add", new { libraryId = Model.AsEnumerable().FirstOrDefault().LibraryId })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Description")
+        </th>
+        <th>
+            @Html.DisplayName("Shelves")
+        </th>
+        <th>
+            @Html.DisplayName("Books")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfShelves)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfBooks)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { bookshelfId=item.BookshelfId }) |
+            @Html.ActionLink("Details", "Details", new { bookshelfId = item.BookshelfId }) |
+            @Html.ActionLink("Delete", "Delete", new { bookshelfId = item.BookshelfId })
+        </td>
+    </tr>
+}
+
+</table>

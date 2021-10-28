@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
+using MyLibrary.Models;
 using MyLibrary.Repository;
+using MyLibrary.ViewModel;
 
 namespace MyLibrary.Controllers
 {
@@ -23,21 +26,39 @@ namespace MyLibrary.Controllers
             return View();
         }
 
-        // GET: Library/Create
-        public ActionResult Create()
+        // GET: Library/Add
+        [Authorize(Roles ="User, Admin")]
+        public ActionResult Add()
         {
-            return View();
+            return View("AddLibrary");
         }
 
-        // POST: Library/Create
+        // POST: Library/Add
+        [Authorize(Roles = "User, Admin")]
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Add(FormCollection collection)
         {
             try
             {
-                // TODO: Add insert logic here
+                LibraryAddViewModel libraryAddViewModel = new LibraryAddViewModel();
+                UpdateModel(libraryAddViewModel);
 
-                return RedirectToAction("Index");
+                UserRepository userRepository = new UserRepository();
+
+                LibraryModel libraryModel = new LibraryModel();
+                //libraryModel.LibraryId = Guid.NewGuid();
+                libraryModel.Description = libraryAddViewModel.LibraryDescription;
+                           
+                
+                libraryModel.UserId = userRepository.GetUserByEmail(User.Identity.Name).UserId;
+
+                Guid LibraryId = libraryRepository.InsertLibrary(libraryModel);
+
+                return RedirectToAction("BatchCreate", "Bookshelf",
+                    new { 
+                        libraryId = LibraryId, 
+                        numberOfBookshelves = libraryAddViewModel.NumberOfBookshelfs 
+                    });
             }
             catch
             {

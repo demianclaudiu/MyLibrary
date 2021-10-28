@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using MyLibrary.Models.DBObjects;
 using MyLibrary.Models;
+using MyLibrary.ViewModel;
 
 namespace MyLibrary.Repository
 {
@@ -47,9 +48,33 @@ namespace MyLibrary.Repository
                 .FirstOrDefault(x => x.BookshelfId == bookshelfId));
         }
 
+        public List<BookshelfStatsViewModel> GetBookshelvesStats(Guid libraryId)
+        {
+            List<BookshelfStatsViewModel> bookshelfStatsViewModels = new List<BookshelfStatsViewModel>();
+            foreach (Bookshelf dbBookshelf in dbContext.Bookshelfs.Where(x => x.LibraryId == libraryId))
+            {
+
+                List<Shelf> shelves = dbContext.Shelfs.Where(x => x.BookshelfId == dbBookshelf.BookshelfId).ToList();
+                int numberOfBooks = 0;
+                if (shelves.Count > 0)
+                    foreach (Shelf shelf in shelves)
+                        numberOfBooks += dbContext.Ownerships.Count(x => x.ShelfId == shelf.ShelfId);
+
+                bookshelfStatsViewModels.Add(new BookshelfStatsViewModel
+                {
+                    BookshelfId = dbBookshelf.BookshelfId,
+                    LibraryId = dbBookshelf.LibraryId,
+                    Description = dbBookshelf.Description,
+                    NumberOfShelves = shelves.Count(),
+                    NumberOfBooks = numberOfBooks
+                });
+            }
+            return bookshelfStatsViewModels;
+        }
+
         public void InsertBookshelf(BookshelfModel bookshelfModel)
         {
-            bookshelfModel.BookshelfId = Guid.NewGuid();
+            //bookshelfModel.BookshelfId = Guid.NewGuid();
             dbContext.Bookshelfs.InsertOnSubmit(MapModelToDBObject(bookshelfModel));
             dbContext.SubmitChanges();
         }
@@ -79,12 +104,26 @@ namespace MyLibrary.Repository
 
         private Bookshelf MapModelToDBObject(BookshelfModel bookshelfModel)
         {
-            throw new NotImplementedException();
+            if (bookshelfModel != null)
+                return new Bookshelf
+                {
+                    BookshelfId = bookshelfModel.BookshelfId,
+                    Description = bookshelfModel.Description,
+                    LibraryId = bookshelfModel.LibraryId
+                };
+            return null;
         }
 
         private BookshelfModel MapDBObjectToModel(Bookshelf dbBookshelf)
         {
-            throw new NotImplementedException();
+            if (dbBookshelf != null)
+                return new BookshelfModel
+                {
+                    BookshelfId = dbBookshelf.BookshelfId,
+                    Description = dbBookshelf.Description,
+                    LibraryId = dbBookshelf.LibraryId
+                };
+            return null;
         }
     }
 }

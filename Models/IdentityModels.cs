@@ -29,5 +29,11 @@ namespace MyLibrary.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<MyLibrary.ViewModel.LibraryAddViewModel> LibraryAddViewModels { get; set; }
+
+        public System.Data.Entity.DbSet<MyLibrary.ViewModel.BookshelfAddViewModel> BookshelfAddViewModels { get; set; }
+
+        public System.Data.Entity.DbSet<MyLibrary.Models.BookshelfModel> BookshelfModels { get; set; }
     }
 }
