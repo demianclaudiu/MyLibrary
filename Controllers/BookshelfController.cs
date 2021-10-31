@@ -189,14 +189,18 @@ namespace MyLibrary.Controllers
             {
                 ShelfRepository shelfRepository = new ShelfRepository();
                 
-                //BookshelfModel bookshelfModel = new BookshelfModel();
-
-                //UpdateModel(bookshelfModel);
-
                 Guid libraryId = bookshelfRepository.GetBookshelfById(bookshelfId).LibraryId;
 
-                foreach (ShelfModel shelfModel in shelfRepository.GetAllShelfsInBookshelf(bookshelfId))
-                    shelfRepository.DeleteShelf(shelfModel.ShelfId);
+                List<ShelfModel> shelfModels = shelfRepository.GetAllShelfsInBookshelf(bookshelfId);
+                if (shelfModels != null)
+                {
+                    OwnershipRepository ownershipRepository = new OwnershipRepository();
+                    foreach(ShelfModel shelfModel in shelfModels)
+                    {
+                        ownershipRepository.DeleteOwnershipsByShelfId(shelfModel.ShelfId);
+                    }
+                    shelfRepository.BulkDeleteShelf(bookshelfId);
+                }
 
                 bookshelfRepository.DeleteBookshelf(bookshelfId);
 

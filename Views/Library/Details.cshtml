@@ -1,4 +1,4 @@
-﻿@model MyLibrary.Models.BookshelfModel
+﻿@model MyLibrary.Models.LibraryModel
 
 @{
     ViewBag.Title = "Details";
@@ -8,7 +8,7 @@
 <h2>Details</h2>
 
 <div>
-    <h4>BookshelfModel</h4>
+    <h4>LibraryModel</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -22,6 +22,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { bookshelfId = Model.BookshelfId }) |
-    @Html.ActionLink("Back to List", "Index", new { libraryId = Model.LibraryId })
+    @Html.ActionLink("Edit", "Edit", new { libraryId = Model.LibraryId }) |
+    @Html.ActionLink("Back to List", "Index")
 </p>

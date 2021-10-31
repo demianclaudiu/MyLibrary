@@ -100,6 +100,16 @@ namespace MyLibrary.Repository
             }
         }
 
+        public void DeleteOwnershipsByShelfId(Guid shelfId)
+        {
+            List<Ownership> ownerships = dbContext.Ownerships.Where(x => x.ShelfId == shelfId).ToList(); ;
+            if (ownerships != null)
+            {
+                dbContext.Ownerships.DeleteAllOnSubmit(ownerships);
+                dbContext.SubmitChanges();
+            }
+        }
+
         public void DeleteOwnership(Guid ownershipId)
         {
             Ownership dbOwnership = dbContext.Ownerships

@@ -4,14 +4,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace MyLibrary.Models
+namespace MyLibrary.ViewModel
 {
-    public class ShelfModel
+    public class ShelfStatsViewModel
     {
         [Key]
         public Guid ShelfId { get; set; }
         public string Description { get; set; }
         public Guid BookshelfId { get; set; }
+        public int NumberOfBooks { get; set; }
 
     }
 }

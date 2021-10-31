@@ -30,7 +30,7 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.NumberOfShelves)
+            @Html.ActionLink(item.NumberOfShelves.ToString(), "Index", "Shelf", new { bookshelfId = item.BookshelfId }, null)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.NumberOfBooks)

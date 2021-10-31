@@ -7,23 +7,31 @@ using System.Web.Security;
 using MyLibrary.Models;
 using MyLibrary.Repository;
 using MyLibrary.ViewModel;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace MyLibrary.Controllers
 {
     public class LibraryController : Controller
     {
         private LibraryRepository libraryRepository = new LibraryRepository();
-        
+
         // GET: Library
+        [Authorize(Roles = "User, Admin")]
         public ActionResult Index()
         {
-            return View();
+            List<LibraryStatsViewModel> libraryStatsViewModels = libraryRepository.GetLibrariesByUser(GetCurrentUserId());
+
+            return View(libraryStatsViewModels);
         }
 
         // GET: Library/Details/5
-        public ActionResult Details(int id)
+        [Authorize(Roles = "User, Admin")]
+        public ActionResult Details(Guid libraryId)
         {
-            return View();
+            LibraryModel libraryModel = libraryRepository.GetLibraryById(libraryId);
+            
+            return View(libraryModel);
         }
 
         // GET: Library/Add
@@ -42,15 +50,11 @@ namespace MyLibrary.Controllers
             {
                 LibraryAddViewModel libraryAddViewModel = new LibraryAddViewModel();
                 UpdateModel(libraryAddViewModel);
-
-                UserRepository userRepository = new UserRepository();
-
+                    
                 LibraryModel libraryModel = new LibraryModel();
                 //libraryModel.LibraryId = Guid.NewGuid();
                 libraryModel.Description = libraryAddViewModel.LibraryDescription;
-                           
-                
-                libraryModel.UserId = userRepository.GetUserByEmail(User.Identity.Name).UserId;
+                libraryModel.UserId = GetCurrentUserId();
 
                 Guid LibraryId = libraryRepository.InsertLibrary(libraryModel);
 
@@ -67,18 +71,29 @@ namespace MyLibrary.Controllers
         }
 
         // GET: Library/Edit/5
-        public ActionResult Edit(int id)
+        [Authorize(Roles = "User, Admin")]
+        public ActionResult Edit(Guid libraryId)
         {
-            return View();
+            LibraryModel libraryModel = libraryRepository.GetLibraryById(libraryId);
+            
+            return View(libraryModel);
         }
 
         // POST: Library/Edit/5
+        [Authorize(Roles = "User, Admin")]
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(Guid libraryId, FormCollection collection)
         {
             try
             {
                 // TODO: Add update logic here
+                LibraryModel libraryModel = new LibraryModel();
+
+                UpdateModel(libraryModel);
+                
+                libraryModel.UserId = GetCurrentUserId();
+
+                libraryRepository.UpdateLibrary(libraryModel);
 
                 return RedirectToAction("Index");
             }
@@ -89,18 +104,47 @@ namespace MyLibrary.Controllers
         }
 
         // GET: Library/Delete/5
-        public ActionResult Delete(int id)
+        [Authorize(Roles = "User, Admin")]
+        public ActionResult Delete(Guid libraryId)
         {
-            return View();
+            LibraryModel libraryModel = libraryRepository.GetLibraryById(libraryId);
+
+            return View(libraryModel);
         }
 
         // POST: Library/Delete/5
+        [Authorize(Roles = "User, Admin")]
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(Guid libraryId, FormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
+                LibraryModel libraryModel = new LibraryModel();
+
+                UpdateModel(libraryModel);
+
+                BookshelfRepository bookshelfRepository = new BookshelfRepository();
+                
+                List<BookshelfModel> bookshelfModels = bookshelfRepository.GetAllBookshelfsByLibrary(libraryModel.LibraryId);
+                if (bookshelfModels != null)
+                {
+                    ShelfRepository shelfRepository = new ShelfRepository();
+                    OwnershipRepository ownershipRepository = new OwnershipRepository();
+
+                    foreach (BookshelfModel bookshelfModel in bookshelfModels)
+                    {
+                        List<ShelfModel> shelfModels = shelfRepository.GetAllShelfsInBookshelf(bookshelfModel.BookshelfId);
+                        if (shelfModels!=null)
+                        {
+                            foreach (ShelfModel shelfModel in shelfModels)
+                                ownershipRepository.DeleteOwnershipsByShelfId(shelfModel.ShelfId);
+                            shelfRepository.BulkDeleteShelf(bookshelfModel.BookshelfId);
+                        }
+                    }
+                    bookshelfRepository.BulkDeleteBookshelf(libraryModel.LibraryId);
+                }
+
+                libraryRepository.DeleteLibrary(libraryModel.LibraryId);
 
                 return RedirectToAction("Index");
             }
@@ -108,6 +152,22 @@ namespace MyLibrary.Controllers
             {
                 return View();
             }
+        }
+
+        private Guid GetCurrentUserId()
+        {
+            Guid userId;
+            HttpCookie cookie = Request.Cookies.Get("LibraryInfo");
+            if (cookie == null)
+            {
+                UserRepository userRepository = new UserRepository();
+                userId = userRepository.GetUserByEmail(User.Identity.Name).UserId;
+            }
+            else
+            {
+                userId = Guid.Parse(cookie.Value);
+            }
+            return userId;
         }
     }
 }

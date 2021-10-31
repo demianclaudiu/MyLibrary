@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using MyLibrary.Models.DBObjects;
 using MyLibrary.Models;
+using MyLibrary.ViewModel;
 
 namespace MyLibrary.Repository
 {
@@ -41,6 +42,21 @@ namespace MyLibrary.Repository
             return shelfList;
         }
 
+        public List<ShelfStatsViewModel> GetAllShelfStatsInBookshelf(Guid bookshelfId)
+        {
+            List<ShelfStatsViewModel> shelfList = new List<ShelfStatsViewModel>();
+            foreach (Shelf dbShelf in dbContext.Shelfs.Where(x => x.BookshelfId == bookshelfId))
+            {
+                shelfList.Add(new ShelfStatsViewModel
+                {
+                    ShelfId = dbShelf.ShelfId,
+                    Description = dbShelf.Description,
+                    NumberOfBooks = dbContext.Ownerships.Count(x => x.ShelfId == dbShelf.ShelfId)
+                });
+            }
+            return shelfList;
+        }
+
         public ShelfModel GetShelfById( Guid shelfId)
         {
             return MapDBObjectToModel(dbContext.Shelfs
@@ -49,7 +65,6 @@ namespace MyLibrary.Repository
 
         public void InserShelf(ShelfModel shelfModel)
         {
-            shelfModel.ShelfId = Guid.NewGuid();
             dbContext.Shelfs.InsertOnSubmit(MapModelToDBObject(shelfModel));
             dbContext.SubmitChanges();
         }
@@ -61,6 +76,16 @@ namespace MyLibrary.Repository
             {
                 dbShelf.Description = shelfModel.Description;
                 dbShelf.BookshelfId = shelfModel.BookshelfId;
+                dbContext.SubmitChanges();
+            }
+        }
+
+        public void BulkDeleteShelf(Guid bookshelfId)
+        {
+            List<Shelf> shelves = dbContext.Shelfs.Where(x => x.BookshelfId == bookshelfId).ToList();
+            if (shelves != null)
+            {
+                dbContext.Shelfs.DeleteAllOnSubmit(shelves);
                 dbContext.SubmitChanges();
             }
         }

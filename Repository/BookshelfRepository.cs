@@ -48,25 +48,32 @@ namespace MyLibrary.Repository
                 .FirstOrDefault(x => x.BookshelfId == bookshelfId));
         }
 
+        public int GetNumberOfBooksInBookshelf(Guid bookshelfId)
+        {
+            List<Shelf> shelves = dbContext.Shelfs.Where(x => x.BookshelfId == bookshelfId).ToList();
+            int numberOfBooks = 0;
+            if (shelves.Count > 0)
+                foreach (Shelf shelf in shelves)
+                    numberOfBooks += dbContext.Ownerships.Count(x => x.ShelfId == shelf.ShelfId);
+
+            return numberOfBooks;
+        }
+
         public List<BookshelfStatsViewModel> GetBookshelvesStats(Guid libraryId)
         {
             List<BookshelfStatsViewModel> bookshelfStatsViewModels = new List<BookshelfStatsViewModel>();
             foreach (Bookshelf dbBookshelf in dbContext.Bookshelfs.Where(x => x.LibraryId == libraryId))
             {
 
-                List<Shelf> shelves = dbContext.Shelfs.Where(x => x.BookshelfId == dbBookshelf.BookshelfId).ToList();
-                int numberOfBooks = 0;
-                if (shelves.Count > 0)
-                    foreach (Shelf shelf in shelves)
-                        numberOfBooks += dbContext.Ownerships.Count(x => x.ShelfId == shelf.ShelfId);
-
+                int numberOfShelves = dbContext.Shelfs.Count(x => x.BookshelfId == dbBookshelf.BookshelfId);
+                
                 bookshelfStatsViewModels.Add(new BookshelfStatsViewModel
                 {
                     BookshelfId = dbBookshelf.BookshelfId,
                     LibraryId = dbBookshelf.LibraryId,
                     Description = dbBookshelf.Description,
-                    NumberOfShelves = shelves.Count(),
-                    NumberOfBooks = numberOfBooks
+                    NumberOfShelves = numberOfShelves,
+                    NumberOfBooks = GetNumberOfBooksInBookshelf(dbBookshelf.BookshelfId)
                 });
             }
             return bookshelfStatsViewModels;
@@ -87,6 +94,16 @@ namespace MyLibrary.Repository
             {
                 dbBookshelf.Description = bookshelfModel.Description;
                 dbBookshelf.LibraryId = bookshelfModel.LibraryId;
+                dbContext.SubmitChanges();
+            }
+        }
+
+        public void BulkDeleteBookshelf(Guid libraryId)
+        {
+            List<Bookshelf> bookshelves = dbContext.Bookshelfs.Where(x => x.LibraryId == libraryId).ToList();
+            if (bookshelves!=null)
+            {
+                dbContext.Bookshelfs.DeleteAllOnSubmit(bookshelves);
                 dbContext.SubmitChanges();
             }
         }

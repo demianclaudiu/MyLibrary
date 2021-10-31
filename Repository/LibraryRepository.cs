@@ -32,12 +32,30 @@ namespace MyLibrary.Repository
             return libraryList;
         }
 
-        public List<LibraryModel> GetLibrariesByUser(Guid userId)
+        public int GetNumberOfBooksInLibrary(Guid libraryId)
         {
-            List<LibraryModel> libraryList = new List<LibraryModel>();
+            BookshelfRepository bookshelfRepository = new BookshelfRepository();
+            
+            List<BookshelfModel> bookshelfModels = bookshelfRepository.GetAllBookshelfsByLibrary(libraryId);
+            int numberOfBooks = 0;
+            foreach (BookshelfModel bookshelfModel in bookshelfModels)
+                numberOfBooks += bookshelfRepository.GetNumberOfBooksInBookshelf(bookshelfModel.BookshelfId);
+
+            return numberOfBooks;
+        }
+
+        public List<LibraryStatsViewModel> GetLibrariesByUser(Guid userId)
+        {
+            List<LibraryStatsViewModel> libraryList = new List<LibraryStatsViewModel>();
             foreach (Library dbLibrary in dbContext.Libraries.Where(x=>x.UserId == userId))
             {
-                libraryList.Add(MapDBObjectToModel(dbLibrary));
+                libraryList.Add(new LibraryStatsViewModel
+                {
+                    LibraryId = dbLibrary.LibraryId,
+                    Description = dbLibrary.Description,
+                    NumberOfBooks = GetNumberOfBooksInLibrary(dbLibrary.LibraryId),
+                    NumberOfBookshelves = dbContext.Bookshelfs.Count(x=>x.LibraryId == dbLibrary.LibraryId)
+                });
             }
             return libraryList;
         }

@@ -79,9 +79,16 @@ namespace MyLibrary.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+            HttpCookie LibraryInfoCookie = new HttpCookie("LibraryInfo");
+            var user = UserManager.FindByEmail(model.Email);
+            LibraryInfoCookie.Value = user.LibraryUserId.ToString();
+            LibraryInfoCookie.Expires.AddDays(2);
+
             switch (result)
             {
                 case SignInStatus.Success:
+                    HttpContext.Response.SetCookie(LibraryInfoCookie);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -162,6 +169,8 @@ namespace MyLibrary.Controllers
                     Email = model.Email,
                     Name = "New Librarian"
                 };
+
+                user.LibraryUserId = userModel.UserId;
 
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

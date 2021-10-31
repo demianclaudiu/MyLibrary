@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MyLibrary.ViewModel.ShelfStatsViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Shelfs in your bookshelf</h2>
+
+<p>
+    @Html.ActionLink("Add another shelf", "Add", new { bookshelfId = Guid.Parse(Request.QueryString["bookshelfId"]) })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayName("Books")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfBooks)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { shelfId=item.ShelfId }) |
+            @Html.ActionLink("Details", "Details", new { shelfId=item.ShelfId }) |
+            @Html.ActionLink("Delete", "Delete", new { shelfId=item.ShelfId })
+        </td>
+    </tr>
+}
+
+</table>
