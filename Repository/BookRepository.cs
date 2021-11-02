@@ -75,7 +75,7 @@ namespace MyLibrary.Repository
         public List<BookModel> GetAllBooksByGenre(string genre)
         {
             List<BookModel> booksList = new List<BookModel>();
-            foreach (Book dbBook in dbContext.Books.Where(x => x.Author.ToLower().Contains(genre.ToLower())))
+            foreach (Book dbBook in dbContext.Books.Where(x => x.Genre.ToLower().Contains(genre.ToLower())))
             {
                 booksList.Add(MapDBObjectToModel(dbBook));
             }
@@ -136,7 +136,7 @@ namespace MyLibrary.Repository
                 {
                     BookId = bookModel.BookId,
                     ISBN = bookModel.ISBN,
-                    Title = bookModel.Author,
+                    Title = bookModel.Title,
                     Author = bookModel.Author,
                     Description = bookModel.Description,
                     YearPublished = bookModel.YearPublished,

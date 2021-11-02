@@ -47,5 +47,7 @@ namespace MyLibrary.Models
         public System.Data.Entity.DbSet<MyLibrary.Models.ShelfModel> ShelfModels { get; set; }
 
         public System.Data.Entity.DbSet<MyLibrary.ViewModel.ShelfStatsViewModel> ShelfStatsViewModels { get; set; }
+
+        public System.Data.Entity.DbSet<MyLibrary.Models.BookModel> BookModels { get; set; }
     }
 }

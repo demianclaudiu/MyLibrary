@@ -1,0 +1,63 @@
+﻿@model MyLibrary.Models.BookModel
+
+<tr>
+    <td>
+        <img src="@Url.Content(Model.CoverImageLocation)" width="100" />
+    </td>
+    <td>
+        <table >
+            <tr>
+                <td>
+                    <span class="font-weight-bold">@Html.DisplayFor(modelItem => Model.Title)</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.ISBN)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink(Model.Publisher, "Index", new { filter = "publisher", publisher = Server.UrlEncode(Model.Publisher.Trim()) })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.ActionLink(Model.YearPublished.ToString(), "Index", new { filter = "year", year = Model.YearPublished })
+                </td>
+            </tr>
+        </table>
+    </td>
+    <td>
+        @{
+            List<string> authors = Model.Author.Split(',').ToList();
+            foreach (string author in authors)
+            {
+                @Html.ActionLink(author, "Index", new { filter = "author", author = Server.UrlEncode(author.Trim()) })
+                <br />
+            }
+        }
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => Model.Description)
+    </td>
+    <td>
+        @{
+            List<string> genres = Model.Genre.Split(',').ToList();
+            foreach (string genre in genres)
+            {
+                @Html.ActionLink(genre, "Index", new { filter = "genre", genre = Server.UrlEncode(genre.Trim()) })
+                <br />
+            }
+        }
+    </td>
+    <td>
+        @Html.ActionLink("Details", "Details", new { bookId = Model.BookId }) <br />
+        @if (User.Identity.IsAuthenticated)
+        {
+            @Html.ActionLink("Edit", "Edit", new { bookId = Model.BookId }) <br />
+            @Html.ActionLink("Delete", "Delete", new { bookId = Model.BookId }) <br />
+            @Html.ActionLink("Add cover", "AddCover", new { bookId = Model.BookId })
+        }
+    </td>
+</tr>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MyLibrary.Models;
+using MyLibrary.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,10 +10,39 @@ namespace MyLibrary.Controllers
 {
     public class BookController : Controller
     {
+        BookRepository bookRepository = new BookRepository();
+        
         // GET: Book
-        public ActionResult Index()
+        public ActionResult Index(string filter, string author, string publisher,string genre, int? year, string title)
         {
-            return View();
+            List<BookModel> bookModels;
+
+            switch (filter)
+            {
+                case "author":
+                    bookModels = bookRepository.GetAllBooksByAuthor(Server.UrlDecode(author));
+                    break;
+                case "genre":
+                    bookModels = bookRepository.GetAllBooksByGenre(Server.UrlDecode(genre));
+                    break;
+                case "publisher":
+                    bookModels = bookRepository.GetAllBooksByPublisher(Server.UrlDecode(publisher));
+                    break;
+                case "year":
+                    if (year.HasValue)
+                        bookModels = bookRepository.GetAllBooksByYearPublished(year.Value);
+                    else
+                        bookModels = bookRepository.GetAllBooks();
+                    break;
+                case "title":
+                    bookModels = bookRepository.GetAllBooksByTile(Server.UrlDecode(title));
+                    break;
+                default:
+                    bookModels = bookRepository.GetAllBooks();
+                    break;
+            }
+            
+            return View(bookModels);
         }
 
         // GET: Book/Details/5
@@ -21,18 +52,27 @@ namespace MyLibrary.Controllers
         }
 
         // GET: Book/Create
-        public ActionResult Create()
+        public ActionResult Add()
         {
-            return View();
+            BookModel bookModel = new BookModel();
+
+            bookModel.IsCoverImageLocal = true;
+            bookModel.CoverImageLocation = "~/Covers/default_cover.png";
+            
+            return View(bookModel);
         }
 
         // POST: Book/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Add(FormCollection collection)
         {
             try
             {
-                // TODO: Add insert logic here
+                BookModel bookModel = new BookModel();
+
+                UpdateModel(bookModel);
+
+                bookRepository.InsertBook(bookModel);
 
                 return RedirectToAction("Index");
             }
@@ -41,6 +81,8 @@ namespace MyLibrary.Controllers
                 return View();
             }
         }
+
+
 
         // GET: Book/Edit/5
         public ActionResult Edit(int id)
