@@ -4,6 +4,11 @@ using System.Linq;
 using System.Web;
 using MyLibrary.Models.DBObjects;
 using MyLibrary.Models;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
+using System.Text;
 
 namespace MyLibrary.Repository
 {
@@ -91,6 +96,67 @@ namespace MyLibrary.Repository
         {
             return MapDBObjectToModel(dbContext.Books
                 .FirstOrDefault(x => x.BookId == bookId));
+        }
+
+        public BookModel GetBookFromApiByISBN(string ISBN)
+        {
+            BookModel bookModel = new BookModel();
+
+            HttpClient client = new HttpClient();
+
+            string uri = "https://openlibrary.org/api/books?bibkeys=ISBN:" + ISBN + "&jscmd=data&format=json";
+
+            Task<string> stringTask = client.GetStringAsync(uri);
+            string bookData = stringTask.Result;
+            
+
+            JObject document = JObject.Parse(bookData);
+            if(document.Count!=0)
+            {
+                bookModel.BookId = Guid.NewGuid();
+                bookModel.ISBN = ISBN;
+                bookModel.Title = (string)document["ISBN:" + ISBN]["title"];
+                bookModel.IsCoverImageLocal = false;
+                bookModel.CoverImageLocation = (string)document["ISBN:" + ISBN]["cover"]["medium"];
+                bookModel.Publisher = (string)document["ISBN:" + ISBN]["publishers"][0]["name"];
+                if ((string)document["ISBN:" + ISBN]["publish_date"]!=null)
+                    bookModel.YearPublished = int.Parse(Regex.Match((string)document["ISBN:" + ISBN]["publish_date"], @"\d{4}").Value);
+
+                JArray authors = (JArray)document["ISBN:" + ISBN]["authors"];
+                StringBuilder authorList = new StringBuilder();
+                foreach (JObject author in authors)
+                {
+                    authorList.Append((string)author["name"] + ", ");
+                }
+                if (authorList.Length != 0)
+                    authorList.Length = authorList.Length - 2;//remove the last 2 characters
+                bookModel.Author = authorList.ToString();
+
+                JArray subjects = (JArray)document["ISBN:" + ISBN]["subjects"];
+                StringBuilder subjectList = new StringBuilder();
+                foreach (JObject subject in subjects)
+                {
+                    subjectList.Append((string)subject["name"] + ", ");
+                }
+                if (subjectList.Length != 0)
+                    subjectList.Length = subjectList.Length - 2;
+                bookModel.Genre = subjectList.ToString();
+
+                stringTask = client.GetStringAsync("https://openlibrary.org/api/books?bibkeys=ISBN:" + ISBN + "&jscmd=details&format=json");
+                string bookDetails = stringTask.Result;
+                JObject details = JObject.Parse(bookDetails);
+
+                bookModel.Description = (string)details["ISBN:" + ISBN]["details"]["description"]["value"];
+
+                client.Dispose();
+
+                return bookModel;
+
+            }
+
+            client.Dispose();
+
+            return null;
         }
 
         public void InsertBook(BookModel bookModel)

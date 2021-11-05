@@ -2,6 +2,7 @@
 using MyLibrary.Repository;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -82,28 +83,90 @@ namespace MyLibrary.Controllers
             }
         }
 
-
-
-        // GET: Book/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult AddByISBN()
         {
+
             return View();
         }
 
-        // POST: Book/Edit/5
+        // POST: Book/Create
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult AddByISBN(string ISBN)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                BookModel bookModel = bookRepository.GetBookFromApiByISBN(ISBN);
+                if (bookModel != null)
+                {
+                    bookRepository.InsertBook(bookModel);
+                    return RedirectToAction("Edit", new { bookId = bookModel.BookId });
+                }
+                else
+                    return RedirectToAction("Add");
             }
             catch
             {
                 return View();
             }
+        }
+
+
+        // GET: Book/Edit/5
+        public ActionResult Edit(Guid bookId)
+        {
+            BookModel bookModel = bookRepository.GetBookById(bookId);
+            
+            return View(bookModel);
+        }
+
+        // POST: Book/Edit/5
+        [HttpPost]
+        public ActionResult Edit(Guid bookId, FormCollection collection)
+        {
+            try
+            {
+                BookModel bookModel = new BookModel();
+                UpdateModel(bookModel);
+
+                bookRepository.UpdateBook(bookModel);
+
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public ActionResult AddCover(Guid bookId)
+        {
+            ViewBag.BookId = bookId;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddCover(Guid bookId, HttpPostedFileBase postedFile)
+        {
+            if (postedFile != null)
+            {
+                string path = Server.MapPath("~/Covers/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                postedFile.SaveAs(path + Path.GetFileName(bookId.ToString()+Path.GetExtension(postedFile.FileName)));
+                ViewBag.Message = "File uploaded successfully.";
+
+                BookModel bookModel = bookRepository.GetBookById(bookId);
+                bookModel.CoverImageLocation = "~/Covers/" + Path.GetFileName(bookId.ToString() + Path.GetExtension(postedFile.FileName));
+
+                bookRepository.UpdateBook(bookModel);
+
+            }
+
+            return View();
         }
 
         // GET: Book/Delete/5

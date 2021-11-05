@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "AddCover";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AddCover</h2>
+
+<div>
+    @using (Html.BeginForm("AddCover", "Book",new { bookId = Request.QueryString["bookId"] },FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <span>Select File:</span>
+        <input type="file" name="postedFile" />
+        <hr />
+        <input type="submit" value="Upload" />
+        <br />
+        <span style="color:green">@ViewBag.Message</span>
+    }
+</div>
+
+<div>
+    @Html.ActionLink("Back to Edit", "Edit", new { bookId = Request.QueryString["bookId"] })
+</div>

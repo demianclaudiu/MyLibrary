@@ -55,6 +55,9 @@
       <HintPath>packages\Microsoft.AspNetCore.Html.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Html.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
@@ -111,9 +114,6 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
@@ -196,6 +196,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LibraryModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\OpelLibraryBookModel.cs" />
     <Compile Include="Models\OwnershipModel.cs" />
     <Compile Include="Models\ShelfModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -299,6 +300,9 @@
     <Content Include="Views\Book\Add.cshtml" />
     <Content Include="Views\Book\Index.cshtml" />
     <Content Include="Views\Shared\_BookDetailsPartial.cshtml" />
+    <Content Include="Views\Book\Edit.cshtml" />
+    <Content Include="Views\Book\AddCover.cshtml" />
+    <Content Include="Views\Book\AddByISBN.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
