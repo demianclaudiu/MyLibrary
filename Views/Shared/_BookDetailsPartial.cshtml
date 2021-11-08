@@ -8,7 +8,7 @@
         <table >
             <tr>
                 <td>
-                    <span class="font-weight-bold">@Html.DisplayFor(modelItem => Model.Title)</span>
+                    @Html.ActionLink(Model.Title, "Details", new { bookId = Model.BookId })
                 </td>
             </tr>
             <tr>
@@ -44,10 +44,16 @@
     <td>
         @{
             List<string> genres = Model.Genre.Split(',').ToList();
+            int count = 0;
             foreach (string genre in genres)
             {
+                count++;
                 @Html.ActionLink(genre, "Index", new { filter = "genre", genre = Server.UrlEncode(genre.Trim()) })
                 <br />
+                if (count>5)
+                {
+                    break;
+                }
             }
         }
     </td>

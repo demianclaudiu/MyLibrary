@@ -1,0 +1,52 @@
+﻿@model MyLibrary.ViewModel.SelectBookViewModel
+@{
+    ViewBag.Title = "AddBookToShelf";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AddBookToShelf</h2>
+
+@ViewBag.SuccessfullyAdded
+
+@using (Html.BeginForm())
+{
+    <p>
+        Find book: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+
+@using (Html.BeginForm())
+{
+    <table class="table table table-striped table-hover">
+        @foreach (var book in Model.Books)
+        {
+            <tr>
+                <td class="align-middle">
+                    @Html.RadioButtonFor(m => m.SelectedBook, book.BookId)
+                </td>
+                <td>
+                    <img src="@Url.Content(book.CoverImageLocation)" width="75" />
+                </td>
+                <td>
+                    @book.Title
+                </td>
+                <td>
+                    @Html.DisplayName(book.ISBN)
+                </td>
+                <td>
+                    @book.Author
+                </td>
+                <td>
+                    @Html.DisplayName(book.YearPublished.Value.ToString())
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Add" class="btn btn-default" />
+        </div>
+    </div>
+
+}

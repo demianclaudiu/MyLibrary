@@ -30,6 +30,7 @@
             @Html.DisplayFor(modelItem => item.NumberOfBooks)
         </td>
         <td>
+            @Html.ActionLink("Add Book", "AddBookToShelf","MyBooks",new {shelfId=item.ShelfId},null) | 
             @Html.ActionLink("Edit", "Edit", new { shelfId=item.ShelfId }) |
             @Html.ActionLink("Details", "Details", new { shelfId=item.ShelfId }) |
             @Html.ActionLink("Delete", "Delete", new { shelfId=item.ShelfId })

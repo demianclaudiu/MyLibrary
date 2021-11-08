@@ -45,6 +45,18 @@ namespace MyLibrary.Repository
 
             return ownershipList;
         }
+        public List<OwnershipModel> GetAllOwnershipsByBookId(Guid bookId)
+        {
+            List<OwnershipModel> ownershipList = new List<OwnershipModel>();
+
+            foreach (Ownership dbOwnership in dbContext.Ownerships
+                .Where(x => x.BookId == bookId))
+            {
+                ownershipList.Add(MapDBObjectToModel(dbOwnership));
+            }
+
+            return ownershipList;
+        }
 
         public List<OwnershipModel> GetAllReadOwnershipsByShelfId(Guid shelfId)
         {
@@ -91,7 +103,7 @@ namespace MyLibrary.Repository
                 .FirstOrDefault(x => x.OwnershipId == ownershipModel.OwnershipId);
             if (dbOwnership != null)
             {
-                dbOwnership.BookId = ownershipModel.OwnershipId;
+                dbOwnership.BookId = ownershipModel.BookId;
                 dbOwnership.ShelfId = ownershipModel.ShelfId;
                 dbOwnership.IsRead = ownershipModel.IsRead;
                 dbOwnership.BookmarkedPage = ownershipModel.BookmarkedPage;

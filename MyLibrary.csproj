@@ -180,6 +180,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LibraryController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MyBooksController.cs" />
     <Compile Include="Controllers\ShelfController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -208,11 +209,16 @@
     <Compile Include="Repository\ShelfRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModel\AddBookToLibraryViewModel.cs" />
+    <Compile Include="ViewModel\AddedBookViewModel.cs" />
+    <Compile Include="ViewModel\BookRadioButtonViewModel.cs" />
     <Compile Include="ViewModel\BookshelfAddViewModel.cs" />
     <Compile Include="ViewModel\BookshelfStatsViewModel.cs" />
     <Compile Include="ViewModel\LibraryAddViewModel.cs" />
     <Compile Include="ViewModel\LibraryStatsViewModel.cs" />
+    <Compile Include="ViewModel\SelectBookViewModel.cs" />
     <Compile Include="ViewModel\ShelfStatsViewModel.cs" />
+    <Compile Include="ViewModel\UpdateReadViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -303,6 +309,13 @@
     <Content Include="Views\Book\Edit.cshtml" />
     <Content Include="Views\Book\AddCover.cshtml" />
     <Content Include="Views\Book\AddByISBN.cshtml" />
+    <Content Include="Views\Book\Details.cshtml" />
+    <Content Include="Views\MyBooks\AddBookToShelf.cshtml" />
+    <Content Include="Views\Book\Delete.cshtml" />
+    <Content Include="Views\MyBooks\Index.cshtml" />
+    <Content Include="Views\Shared\_AddedBooksDetailsPartial.cshtml" />
+    <Content Include="Views\MyBooks\UpdateRead.cshtml" />
+    <Content Include="Views\MyBooks\Remove.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

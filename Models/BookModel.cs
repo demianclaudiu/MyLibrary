@@ -19,6 +19,7 @@ namespace MyLibrary.Models
         public string Genre { get; set; }
         public string CoverImageLocation { get; set; }
         public bool? IsCoverImageLocal { get; set; }
+        public DateTime? DateAdded { get; set; }
 
     }
 }

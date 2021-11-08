@@ -14,9 +14,15 @@ namespace MyLibrary.Controllers
         BookRepository bookRepository = new BookRepository();
         
         // GET: Book
-        public ActionResult Index(string filter, string author, string publisher,string genre, int? year, string title)
+        public ActionResult Index(string searchString, string filter, string author, string publisher,string genre, int? year, string title)
         {
             List<BookModel> bookModels;
+
+            if (searchString!=null && searchString.Trim()!="")
+            {
+                bookModels = bookRepository.GetAllBooksBySearch(searchString);
+                return View(bookModels);
+            }
 
             switch (filter)
             {
@@ -47,9 +53,11 @@ namespace MyLibrary.Controllers
         }
 
         // GET: Book/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(Guid bookId)
         {
-            return View();
+            BookModel bookModel = bookRepository.GetBookById(bookId);
+
+            return View(bookModel);
         }
 
         // GET: Book/Create
@@ -170,18 +178,27 @@ namespace MyLibrary.Controllers
         }
 
         // GET: Book/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(Guid bookId)
         {
-            return View();
+            BookModel bookModel = bookRepository.GetBookById(bookId);
+
+            return View(bookModel);
         }
 
         // POST: Book/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(Guid bookId, FormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
+                BookModel bookModel = new BookModel();
+
+                UpdateModel(bookModel);
+
+                OwnershipRepository ownershipRepository = new OwnershipRepository();
+
+                if (ownershipRepository.GetAllOwnershipsByBookId(bookModel.BookId) != null)
+                    bookRepository.DeleteBook(bookModel.BookId);
 
                 return RedirectToAction("Index");
             }

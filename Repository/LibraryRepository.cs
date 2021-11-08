@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MyLibrary.ViewModel;
+using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace MyLibrary.Repository
 {
@@ -59,6 +61,25 @@ namespace MyLibrary.Repository
             }
             return libraryList;
         }
+
+        public IEnumerable<SelectListItem> GetLibraryNamesByUser(Guid userId)
+        {
+            List<SelectListItem> libraries = dbContext.Libraries.AsNoTracking()
+                .Where(n => n.UserId == userId)
+                .Select(n =>
+                new SelectListItem
+                {
+                    Value = n.LibraryId.ToString(),
+                    Text = n.Description
+                }).ToList();
+            libraries.Insert(0, new SelectListItem
+            {
+                Value = null,
+                Text = "--- Select Library ---"
+            });
+            return libraries;
+        }
+
 
         public LibraryModel GetLibraryById(Guid libraryId)
         {

@@ -1070,6 +1070,8 @@ namespace MyLibrary.Models.DBObjects
 		
 		private System.Nullable<bool> _IsCoverImageLocal;
 		
+		private System.Nullable<System.DateTime> _DateAdded;
+		
 		private EntitySet<Ownership> _Ownerships;
 		
     #region Extensibility Method Definitions
@@ -1096,6 +1098,8 @@ namespace MyLibrary.Models.DBObjects
     partial void OnCoverImageLocationChanged();
     partial void OnIsCoverImageLocalChanging(System.Nullable<bool> value);
     partial void OnIsCoverImageLocalChanged();
+    partial void OnDateAddedChanging(System.Nullable<System.DateTime> value);
+    partial void OnDateAddedChanged();
     #endregion
 		
 		public Book()
@@ -1164,7 +1168,7 @@ namespace MyLibrary.Models.DBObjects
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Author", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Author", DbType="VarChar(MAX)")]
 		public string Author
 		{
 			get
@@ -1244,7 +1248,7 @@ namespace MyLibrary.Models.DBObjects
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Genre", DbType="VarChar(200)")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Genre", DbType="VarChar(MAX)")]
 		public string Genre
 		{
 			get
@@ -1300,6 +1304,26 @@ namespace MyLibrary.Models.DBObjects
 					this._IsCoverImageLocal = value;
 					this.SendPropertyChanged("IsCoverImageLocal");
 					this.OnIsCoverImageLocalChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateAdded", DbType="DateTime")]
+		public System.Nullable<System.DateTime> DateAdded
+		{
+			get
+			{
+				return this._DateAdded;
+			}
+			set
+			{
+				if ((this._DateAdded != value))
+				{
+					this.OnDateAddedChanging(value);
+					this.SendPropertyChanging();
+					this._DateAdded = value;
+					this.SendPropertyChanged("DateAdded");
+					this.OnDateAddedChanged();
 				}
 			}
 		}

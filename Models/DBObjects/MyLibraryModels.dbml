@@ -51,13 +51,14 @@
       <Column Name="BookId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="ISBN" Type="System.String" DbType="VarChar(13)" CanBeNull="true" />
       <Column Name="Title" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="Author" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Author" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="YearPublished" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Publisher" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="Genre" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="Genre" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="CoverImageLocation" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
       <Column Name="IsCoverImageLocal" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="Book_Ownership" Member="Ownerships" ThisKey="BookId" OtherKey="BookId" Type="Ownership" />
     </Type>
   </Table>

@@ -1,0 +1,33 @@
+﻿@model MyLibrary.ViewModel.AddedBookViewModel
+
+<tr>
+    <td>
+        <img src="@Url.Content(Model.CoverImageLocation)" width="100" />
+    </td>
+    <td>
+        @Html.DisplayFor(model => Model.Title)
+    </td>
+    <td>
+        @Html.DisplayFor(model => Model.Author)
+    </td>
+    <td>
+        @Html.DisplayFor(model => Model.IsRead)
+    </td>
+    <td>
+        @Html.DisplayFor(model => Model.BookMark)
+    </td>
+    <td>
+        @Html.DisplayFor(model => Model.LibraryDescription)
+    </td>
+    <td>
+        @Html.DisplayFor(model => Model.BookshelfDescription)
+    </td>
+    <td>
+        @Html.DisplayFor(model => Model.ShelfDescription)
+    </td>
+    <td>
+        @Html.ActionLink("Move", "Move", new { ownershipId = Model.OwnershipId }) <br />
+        @Html.ActionLink("Remove", "Remove", new { ownershipId = Model.OwnershipId }) <br />
+        @Html.ActionLink("Read it", "UpdateRead", new { ownershipId = Model.OwnershipId }) 
+    </td>
+</tr>

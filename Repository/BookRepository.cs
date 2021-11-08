@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
+using MyLibrary.ViewModel;
+using System.Data.Entity;
 
 namespace MyLibrary.Repository
 {
@@ -29,7 +31,63 @@ namespace MyLibrary.Repository
         public List<BookModel> GetAllBooks()
         {
             List<BookModel> booksList = new List<BookModel>();
-            foreach (Book dbBook in dbContext.Books)
+            foreach (Book dbBook in dbContext.Books.AsNoTracking())
+            {
+                booksList.Add(MapDBObjectToModel(dbBook));
+            }
+            return booksList;
+        }
+
+        internal List<BookRadioButtonViewModel> GetAllRBBooks()
+        {
+            List<BookRadioButtonViewModel> bookRadioButtonViewModels = new List<BookRadioButtonViewModel>();
+
+            foreach (Book dbBook in dbContext.Books.AsNoTracking())
+            {
+                bookRadioButtonViewModels.Add(new BookRadioButtonViewModel
+                {
+                    BookId = dbBook.BookId,
+                    ISBN = dbBook.ISBN,
+                    Title = dbBook.Title,
+                    CoverImageLocation = dbBook.CoverImageLocation,
+                    Author = dbBook.Author,
+                    YearPublished = dbBook.YearPublished
+                });
+            }
+
+            return bookRadioButtonViewModels;
+        }
+
+        internal List<BookRadioButtonViewModel> GetRBBooksBySearch(string searchString)
+        {
+            List<BookRadioButtonViewModel> bookRadioButtonViewModels = new List<BookRadioButtonViewModel>();
+
+            foreach (Book dbBook in dbContext.Books.AsNoTracking()
+                .Where(x=>x.Title.ToLower().Contains(searchString.Trim().ToLower()) || 
+                x.Author.ToLower().Contains(searchString.Trim().ToLower()) || 
+                x.ISBN == searchString.Trim() ))
+            {
+                bookRadioButtonViewModels.Add(new BookRadioButtonViewModel
+                {
+                    BookId = dbBook.BookId,
+                    ISBN = dbBook.ISBN,
+                    Title = dbBook.Title,
+                    CoverImageLocation = dbBook.CoverImageLocation,
+                    Author = dbBook.Author,
+                    YearPublished = dbBook.YearPublished
+                });
+            }
+
+            return bookRadioButtonViewModels;
+        }
+
+        public List<BookModel> GetAllBooksBySearch(string searchString)
+        {
+            List<BookModel> booksList = new List<BookModel>();
+            foreach (Book dbBook in dbContext.Books.AsNoTracking()
+                .Where(x => x.Title.ToLower().Contains(searchString.Trim().ToLower()) ||
+                x.Author.ToLower().Contains(searchString.Trim().ToLower()) ||
+                x.ISBN == searchString.Trim() )) 
             {
                 booksList.Add(MapDBObjectToModel(dbBook));
             }
@@ -39,7 +97,7 @@ namespace MyLibrary.Repository
         public List<BookModel> GetAllBooksByTile(string title)
         {
             List<BookModel> booksList = new List<BookModel>();
-            foreach (Book dbBook in dbContext.Books.Where(x=>x.Title.ToLower().Contains(title.ToLower())))
+            foreach (Book dbBook in dbContext.Books.AsNoTracking().Where(x=>x.Title.ToLower().Contains(title.ToLower())))
             {
                 booksList.Add(MapDBObjectToModel(dbBook));
             }
@@ -49,7 +107,7 @@ namespace MyLibrary.Repository
         public List<BookModel> GetAllBooksByAuthor(string author)
         {
             List<BookModel> booksList = new List<BookModel>();
-            foreach (Book dbBook in dbContext.Books.Where(x => x.Author.ToLower().Contains(author.ToLower())))
+            foreach (Book dbBook in dbContext.Books.AsNoTracking().Where(x => x.Author.ToLower().Contains(author.ToLower())))
             {
                 booksList.Add(MapDBObjectToModel(dbBook));
             }
@@ -59,7 +117,7 @@ namespace MyLibrary.Repository
         public List<BookModel> GetAllBooksByYearPublished(int yearPublished)
         {
             List<BookModel> booksList = new List<BookModel>();
-            foreach (Book dbBook in dbContext.Books
+            foreach (Book dbBook in dbContext.Books.AsNoTracking()
                 .Where(x => x.YearPublished.HasValue && x.YearPublished.Value==yearPublished))
             {
                 booksList.Add(MapDBObjectToModel(dbBook));
@@ -70,7 +128,7 @@ namespace MyLibrary.Repository
         public List<BookModel> GetAllBooksByPublisher(string publisher)
         {
             List<BookModel> booksList = new List<BookModel>();
-            foreach (Book dbBook in dbContext.Books.Where(x => x.Publisher.ToLower().Contains(publisher.ToLower())))
+            foreach (Book dbBook in dbContext.Books.AsNoTracking().Where(x => x.Publisher.ToLower().Contains(publisher.ToLower())))
             {
                 booksList.Add(MapDBObjectToModel(dbBook));
             }
@@ -80,7 +138,7 @@ namespace MyLibrary.Repository
         public List<BookModel> GetAllBooksByGenre(string genre)
         {
             List<BookModel> booksList = new List<BookModel>();
-            foreach (Book dbBook in dbContext.Books.Where(x => x.Genre.ToLower().Contains(genre.ToLower())))
+            foreach (Book dbBook in dbContext.Books.AsNoTracking().Where(x => x.Genre.ToLower().Contains(genre.ToLower())))
             {
                 booksList.Add(MapDBObjectToModel(dbBook));
             }
@@ -88,13 +146,13 @@ namespace MyLibrary.Repository
         }
         public BookModel GetBookByISBN(string isbn)
         {
-            return MapDBObjectToModel(dbContext.Books
+            return MapDBObjectToModel(dbContext.Books.AsNoTracking()
                 .FirstOrDefault(x => x.ISBN == isbn));
         }
 
         public BookModel GetBookById(Guid bookId)
         {
-            return MapDBObjectToModel(dbContext.Books
+            return MapDBObjectToModel(dbContext.Books.AsNoTracking()
                 .FirstOrDefault(x => x.BookId == bookId));
         }
 
@@ -113,40 +171,59 @@ namespace MyLibrary.Repository
             JObject document = JObject.Parse(bookData);
             if(document.Count!=0)
             {
-                bookModel.BookId = Guid.NewGuid();
                 bookModel.ISBN = ISBN;
                 bookModel.Title = (string)document["ISBN:" + ISBN]["title"];
-                bookModel.IsCoverImageLocal = false;
-                bookModel.CoverImageLocation = (string)document["ISBN:" + ISBN]["cover"]["medium"];
+                if (document["ISBN:" + ISBN]["cover"] == null)
+                {
+                    bookModel.IsCoverImageLocal = true;
+                    bookModel.CoverImageLocation = "~/Covers/default_cover.png";
+                }
+                else
+                {
+                    bookModel.IsCoverImageLocal = false;
+                    bookModel.CoverImageLocation = (string)document["ISBN:" + ISBN]["cover"]["medium"];
+                }
+                
                 bookModel.Publisher = (string)document["ISBN:" + ISBN]["publishers"][0]["name"];
+                
                 if ((string)document["ISBN:" + ISBN]["publish_date"]!=null)
                     bookModel.YearPublished = int.Parse(Regex.Match((string)document["ISBN:" + ISBN]["publish_date"], @"\d{4}").Value);
-
-                JArray authors = (JArray)document["ISBN:" + ISBN]["authors"];
-                StringBuilder authorList = new StringBuilder();
-                foreach (JObject author in authors)
+                
+                if (document["ISBN:" + ISBN]["authors"] == null)
+                    bookModel.Author = "Unknown Author";
+                else
                 {
-                    authorList.Append((string)author["name"] + ", ");
+                    JArray authors = (JArray)document["ISBN:" + ISBN]["authors"];
+                    StringBuilder authorList = new StringBuilder();
+                    foreach (JObject author in authors)
+                    {
+                        authorList.Append((string)author["name"] + ", ");
+                    }
+                    if (authorList.Length != 0)
+                        authorList.Length = authorList.Length - 2;//remove the last 2 characters
+                    bookModel.Author = authorList.ToString();
                 }
-                if (authorList.Length != 0)
-                    authorList.Length = authorList.Length - 2;//remove the last 2 characters
-                bookModel.Author = authorList.ToString();
 
-                JArray subjects = (JArray)document["ISBN:" + ISBN]["subjects"];
-                StringBuilder subjectList = new StringBuilder();
-                foreach (JObject subject in subjects)
+                if (document["ISBN:" + ISBN]["subjects"] == null)
+                    bookModel.Genre = "Unknown Genre";
+                else
                 {
-                    subjectList.Append((string)subject["name"] + ", ");
+                    JArray subjects = (JArray)document["ISBN:" + ISBN]["subjects"];
+                    StringBuilder subjectList = new StringBuilder();
+                    foreach (JObject subject in subjects)
+                    {
+                        subjectList.Append((string)subject["name"] + ", ");
+                    }
+                    if (subjectList.Length != 0)
+                        subjectList.Length = subjectList.Length - 2;
+                    bookModel.Genre = subjectList.ToString();
                 }
-                if (subjectList.Length != 0)
-                    subjectList.Length = subjectList.Length - 2;
-                bookModel.Genre = subjectList.ToString();
 
                 stringTask = client.GetStringAsync("https://openlibrary.org/api/books?bibkeys=ISBN:" + ISBN + "&jscmd=details&format=json");
                 string bookDetails = stringTask.Result;
                 JObject details = JObject.Parse(bookDetails);
-
-                bookModel.Description = (string)details["ISBN:" + ISBN]["details"]["description"]["value"];
+                if (details["ISBN:" + ISBN]["details"]["description"]!=null)
+                    bookModel.Description = (string)details["ISBN:" + ISBN]["details"]["description"]["value"];
 
                 client.Dispose();
 
@@ -159,9 +236,80 @@ namespace MyLibrary.Repository
             return null;
         }
 
+        public List<AddedBookViewModel> GetAllAddeBooks(Guid userId)
+        {
+            List<AddedBookViewModel> addedBooks = new List<AddedBookViewModel>();
+            List<Library> libraries = dbContext.Libraries.AsNoTracking().Where(x => x.UserId == userId).ToList();
+            if (libraries.Count != 0)
+            {
+                foreach (Library library in libraries)
+                {
+                    List<Bookshelf> bookshelves = dbContext.Bookshelfs.AsNoTracking().Where(x => x.LibraryId == library.LibraryId).ToList();
+                    if (bookshelves.Count != 0)
+                    {
+                        foreach (Bookshelf bookshelf in bookshelves)
+                        {
+                            List<Shelf> shelves = dbContext.Shelfs.AsNoTracking().Where(x => x.BookshelfId == bookshelf.BookshelfId).ToList();
+                            if (shelves.Count != 0)
+                            {
+                                foreach (Shelf shelf in shelves)
+                                {
+                                    List<Ownership> ownerships = dbContext.Ownerships.AsNoTracking().Where(x => x.ShelfId == shelf.ShelfId).ToList();
+                                    if (ownerships.Count != 0)
+                                    {
+                                        foreach (Ownership ownership in ownerships)
+                                        {
+                                            Book book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId);
+                                            addedBooks.Add(new AddedBookViewModel
+                                            {
+                                                OwnershipId = ownership.OwnershipId,
+                                                BookId = book.BookId,
+                                                CoverImageLocation = book.CoverImageLocation,
+                                                Title = book.Title,
+                                                Author = book.Author,
+                                                IsRead = ownership.IsRead ? "Read" : "Not Read",
+                                                BookMark = ownership.BookmarkedPage.HasValue ? ownership.BookmarkedPage.Value : 0,
+                                                LibraryDescription = library.Description,
+                                                BookshelfDescription = bookshelf.Description,
+                                                ShelfDescription = shelf.Description,
+                                                ShelfId = shelf.ShelfId
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            return addedBooks;
+        
+        }
+
+        public UpdateReadViewModel GetUpdateReadViewModel(Guid ownershipId)
+        {
+            UpdateReadViewModel updateReadViewModel = new UpdateReadViewModel();
+
+            Ownership ownership = dbContext.Ownerships.AsNoTracking().FirstOrDefault(x => x.OwnershipId == ownershipId);
+            Book book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId);
+
+            updateReadViewModel.OwnershipId = ownership.OwnershipId;
+            updateReadViewModel.BookId = ownership.BookId;
+            updateReadViewModel.Author = book.Author;
+            updateReadViewModel.Title = book.Title;
+            updateReadViewModel.IsRead = ownership.IsRead;
+            updateReadViewModel.BookmarkedPage = ownership.BookmarkedPage;
+
+            return updateReadViewModel;
+        }
+
+
         public void InsertBook(BookModel bookModel)
         {
             bookModel.BookId = Guid.NewGuid();
+            bookModel.DateAdded = DateTime.Now;
             dbContext.Books.InsertOnSubmit(MapModelToDBContext(bookModel));
             dbContext.SubmitChanges();
         }
@@ -180,6 +328,7 @@ namespace MyLibrary.Repository
                 dbBook.Genre = bookModel.Genre;
                 dbBook.CoverImageLocation = bookModel.CoverImageLocation;
                 dbBook.IsCoverImageLocal = bookModel.IsCoverImageLocal;
+                dbBook.DateAdded = bookModel.DateAdded;
                 dbContext.SubmitChanges();
             }
         }
@@ -209,7 +358,8 @@ namespace MyLibrary.Repository
                     Publisher = bookModel.Publisher,
                     Genre = bookModel.Genre,
                     CoverImageLocation = bookModel.CoverImageLocation,
-                    IsCoverImageLocal = bookModel.IsCoverImageLocal
+                    IsCoverImageLocal = bookModel.IsCoverImageLocal,
+                    DateAdded = bookModel.DateAdded
                 };
             }
             return null;
@@ -230,7 +380,8 @@ namespace MyLibrary.Repository
                     Publisher = dbBook.Publisher,
                     Genre = dbBook.Genre,
                     CoverImageLocation = dbBook.CoverImageLocation,
-                    IsCoverImageLocal = dbBook.IsCoverImageLocal
+                    IsCoverImageLocal = dbBook.IsCoverImageLocal,
+                    DateAdded = dbBook.DateAdded
                 };
             }
             return null;

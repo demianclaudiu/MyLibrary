@@ -1,0 +1,47 @@
+﻿@model IEnumerable<MyLibrary.ViewModel.AddedBookViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Cover")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Author)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsRead)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BookMark)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LibraryDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BookshelfDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ShelfDescription)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        @Html.Partial("_AddedBooksDetailsPartial", item)
+    }
+
+</table>
