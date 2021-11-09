@@ -211,5 +211,13 @@ namespace MyLibrary.Controllers
                 return View();
             }
         }
+
+        [Authorize(Roles = "User, Admin")]
+        public JsonResult GetBookshelvesByLibraryJson(Guid libraryId)
+        {
+            IEnumerable<SelectListItem> bookshelves = bookshelfRepository.GetBookshelvesListByLibraryId(libraryId);
+
+            return Json(bookshelves, JsonRequestBehavior.AllowGet);
+        }
     }
 }

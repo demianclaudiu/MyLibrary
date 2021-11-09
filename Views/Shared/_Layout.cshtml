@@ -22,6 +22,42 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropDownCatalog" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Catalog<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropDownCatalog">
+                            <li><a class="dropdown-item" href='@Url.Action("Index", "Book")'>View Books</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li><a class="dropdown-item" href='@Url.Action("AddByISBN", "Book")'>Auto Add</a></li>
+                                <li><a class="dropdown-item" href='@Url.Action("Add", "Book")'>Manual Add</a></li>
+                            }
+                        </ul>
+                    </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropDownLibrary" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Libraries<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropDownLibrary">
+                                <li><a class="dropdown-item" href='@Url.Action("Index","Library")'>View Libraries</a></li>
+                                <li><a class="dropdown-item" href='@Url.Action("Add","Library")'>Add</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropDownBooks" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                My Books<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropDownBooks">
+                                <li><a class="dropdown-item" href='@Url.Action("Index","MyBooks")'>View</a></li>
+                                <li><a class="dropdown-item" href='@Url.Action("AddBookToLibrary","MyBooks")'>Add To Library</a></li>
+                            </ul>
+                        </li>
+                    }
+
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>

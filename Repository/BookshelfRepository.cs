@@ -5,6 +5,8 @@ using System.Web;
 using MyLibrary.Models.DBObjects;
 using MyLibrary.Models;
 using MyLibrary.ViewModel;
+using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace MyLibrary.Repository
 {
@@ -40,6 +42,41 @@ namespace MyLibrary.Repository
                 bookshelfList.Add(MapDBObjectToModel(dbBookshelf));
             }
             return bookshelfList;
+        }
+
+        public IEnumerable<SelectListItem> GetBookshelvesList()
+        {
+            List<SelectListItem> bookshelves = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Value = null,
+                    Text = ""
+                }
+            };
+            return bookshelves;
+        }
+
+        public IEnumerable<SelectListItem> GetBookshelvesListByLibraryId(Guid libraryId)
+        {
+            if (libraryId != null)
+            {
+                List<SelectListItem> bookshelves = dbContext.Bookshelfs.AsNoTracking()
+                    .Where(n => n.LibraryId == libraryId)
+                    .Select(n =>
+                    new SelectListItem
+                    {
+                        Value = n.BookshelfId.ToString(),
+                        Text = n.Description
+                    }).ToList();
+                bookshelves.Insert(0, new SelectListItem
+                {
+                    Value = null,
+                    Text = "--- Select Library ---"
+                });
+                return bookshelves;
+            }
+            return null;
         }
 
         public BookshelfModel GetBookshelfById(Guid bookshelfId)

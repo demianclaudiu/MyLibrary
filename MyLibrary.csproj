@@ -209,7 +209,7 @@
     <Compile Include="Repository\ShelfRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModel\AddBookToLibraryViewModel.cs" />
+    <Compile Include="ViewModel\MyBookMoveViewModel.cs" />
     <Compile Include="ViewModel\AddedBookViewModel.cs" />
     <Compile Include="ViewModel\BookRadioButtonViewModel.cs" />
     <Compile Include="ViewModel\BookshelfAddViewModel.cs" />
@@ -316,6 +316,10 @@
     <Content Include="Views\Shared\_AddedBooksDetailsPartial.cshtml" />
     <Content Include="Views\MyBooks\UpdateRead.cshtml" />
     <Content Include="Views\MyBooks\Remove.cshtml" />
+    <Content Include="Views\MyBooks\Move.cshtml" />
+    <Content Include="Views\Shared\_SelectLibraryPartial.cshtml" />
+    <Content Include="Views\MyBooks\AddBookToLibrary.cshtml" />
+    <Content Include="Views\MyBooks\SelectLibrary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

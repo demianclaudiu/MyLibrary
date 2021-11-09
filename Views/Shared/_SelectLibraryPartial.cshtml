@@ -1,0 +1,39 @@
+﻿@model MyLibrary.ViewModel.MyBookMoveViewModel
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(x => Model.SelectedLibrary, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => Model.SelectedLibrary, new SelectList(Model.Libraries, "Value", "Text"), htmlAttributes: new { @class = "form-control", @id = "Library" })
+                @Html.ValidationMessageFor(x => Model.SelectedLibrary, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => Model.SelectedBookshelf, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => Model.SelectedBookshelf, new SelectList(Model.Bookshelves, "Value", "Text"), htmlAttributes: new { @class = "form-control", @id = "Bookshelf" })
+                @Html.ValidationMessageFor(x => Model.SelectedBookshelf, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => Model.SelectedShelf, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.DropDownListFor(x => Model.SelectedShelf, new SelectList(Model.Shelves, "Value", "Text"), htmlAttributes: new { @class = "form-control", @id = "Shelf" })
+                @Html.ValidationMessageFor(x => Model.SelectedShelf, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Select" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+

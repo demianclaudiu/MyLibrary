@@ -236,7 +236,7 @@ namespace MyLibrary.Repository
             return null;
         }
 
-        public List<AddedBookViewModel> GetAllAddeBooks(Guid userId)
+        public List<AddedBookViewModel> GetAllAddeBooks(Guid userId, string searchString)
         {
             List<AddedBookViewModel> addedBooks = new List<AddedBookViewModel>();
             List<Library> libraries = dbContext.Libraries.AsNoTracking().Where(x => x.UserId == userId).ToList();
@@ -259,21 +259,32 @@ namespace MyLibrary.Repository
                                     {
                                         foreach (Ownership ownership in ownerships)
                                         {
-                                            Book book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId);
-                                            addedBooks.Add(new AddedBookViewModel
+                                            Book book;
+                                            if (searchString != null && !String.IsNullOrEmpty(searchString))
                                             {
-                                                OwnershipId = ownership.OwnershipId,
-                                                BookId = book.BookId,
-                                                CoverImageLocation = book.CoverImageLocation,
-                                                Title = book.Title,
-                                                Author = book.Author,
-                                                IsRead = ownership.IsRead ? "Read" : "Not Read",
-                                                BookMark = ownership.BookmarkedPage.HasValue ? ownership.BookmarkedPage.Value : 0,
-                                                LibraryDescription = library.Description,
-                                                BookshelfDescription = bookshelf.Description,
-                                                ShelfDescription = shelf.Description,
-                                                ShelfId = shelf.ShelfId
-                                            });
+                                                book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId && x.Title.ToLower().Contains(searchString.Trim().ToLower()));
+                                            }
+                                            else
+                                            {
+                                                book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId);
+                                            }
+                                            if (book != null)
+                                            {
+                                                addedBooks.Add(new AddedBookViewModel
+                                                {
+                                                    OwnershipId = ownership.OwnershipId,
+                                                    BookId = book.BookId,
+                                                    CoverImageLocation = book.CoverImageLocation,
+                                                    Title = book.Title,
+                                                    Author = book.Author,
+                                                    IsRead = ownership.IsRead ? "Read" : "Not Read",
+                                                    BookMark = ownership.BookmarkedPage.HasValue ? ownership.BookmarkedPage.Value : 0,
+                                                    LibraryDescription = library.Description,
+                                                    BookshelfDescription = bookshelf.Description,
+                                                    ShelfDescription = shelf.Description,
+                                                    ShelfId = shelf.ShelfId
+                                                });
+                                            }
                                         }
                                     }
                                 }

@@ -154,6 +154,15 @@ namespace MyLibrary.Controllers
             }
         }
 
+        [Authorize(Roles = "User, Admin")]
+        public JsonResult GetLibrariesJson()
+        {
+
+            IEnumerable<SelectListItem> libraries = libraryRepository.GetLibraryNamesByUser(GetCurrentUserId());
+
+            return Json(libraries, JsonRequestBehavior.AllowGet);
+        }
+
         private Guid GetCurrentUserId()
         {
             Guid userId;

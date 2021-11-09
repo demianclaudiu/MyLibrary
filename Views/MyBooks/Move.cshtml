@@ -1,0 +1,54 @@
+﻿@model MyLibrary.ViewModel.MyBookMoveViewModel
+
+@{
+    ViewBag.Title = "Move";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts
+    {
+    @Scripts.Render("~/Scripts/jqueryval")
+    <script type="text/javascript">
+            $('#Library').change(function () {
+                var selectedLibrary = $("#Library").val();
+                var bookshelvesSelect = $('#Bookshelf');
+                bookshelvesSelect.empty();
+                if (selectedLibrary != null && selectedLibrary != '') {
+                    $.getJSON('@Url.Action("GetBookshelvesByLibraryJson", "Bookshelf")', { libraryId: selectedLibrary }, function (bookshelves) {
+                        if (bookshelves != null && !jQuery.isEmptyObject(bookshelves))
+                        {
+                            $.each(bookshelves, function (index, bookshelf) {
+                                bookshelvesSelect.append($('<option/>', {
+                                    value: bookshelf.Value,
+                                    text: bookshelf.Text
+                                }));
+                            });
+                        };
+                    });
+                }
+            });
+    </script>
+    <script type="text/javascript">
+    $('#Bookshelf').change(function () {
+        var selectedBookshelf = $("#Bookshelf").val();
+                var shelvesSelect = $('#Shelf');
+                shelvesSelect.empty();
+        if (selectedBookshelf != null && selectedBookshelf != '') {
+            $.getJSON('@Url.Action("GetShelvesByBookshelfJson", "Shelf")', { bookshelfId: selectedBookshelf }, function (shelves) {
+                        if (shelves != null && !jQuery.isEmptyObject(shelves))
+                        {
+                            $.each(shelves, function (index, shelf) {
+                                shelvesSelect.append($('<option/>', {
+                                    value: shelf.Value,
+                                    text: shelf.Text
+                                }));
+                            });
+                        };
+                    });
+                }
+            });
+    </script>
+}
+
+<h2>Move</h2>
+@Html.Partial("_SelectLibraryPartial")

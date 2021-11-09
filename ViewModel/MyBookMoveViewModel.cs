@@ -7,8 +7,9 @@ using System.Web.Mvc;
 
 namespace MyLibrary.ViewModel
 {
-    public class AddBookToLibraryViewModel
+    public class MyBookMoveViewModel
     {
+        [Key]
         public Guid BookId { get; set; }
         public string Title { get; set; }
 
