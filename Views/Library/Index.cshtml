@@ -5,10 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>My Libraries</h2>
 
 <p>
-    @Html.ActionLink("Add another library", "Add")
+    Below are your Libraries. Add another one or configure your existing ones.
+</p>
+
+<p>
+    <a href='@Url.Action("Add","Library")' class="btn btn-primary btn-sm" type="button">&#x2B Add library</a>
 </p>
 <table class="table">
     <tr>
@@ -30,10 +34,10 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @Html.ActionLink(item.NumberOfBookshelves.ToString(),"Index", "Bookshelf", new { libraryId = item.LibraryId }, null)
+            <a href='@Url.Action("Index","Bookshelf",new { libraryId = item.LibraryId })' class="btn btn-default btn-sm" type="button">@item.NumberOfBookshelves.ToString() &raquo;</a>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.NumberOfBooks)
+            <a href='@Url.Action("Index","MyBooks",new { libraryId = item.LibraryId })' class="btn btn-default btn-sm" type="button">@item.NumberOfBooks.ToString() &raquo;</a>
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { libraryId=item.LibraryId }) |

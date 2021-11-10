@@ -45,6 +45,11 @@ namespace MyLibrary.Controllers
         {
             try
             {
+                if (selectBookViewModel.SelectedBook==Guid.Empty && searchString!=null)
+                {
+                    return RedirectToAction("AddBookToShelf", new { shelfId = shelfId, searchString = searchString });
+                }
+
                 OwnershipModel ownershipModel = new OwnershipModel
                 {
                     ShelfId = shelfId,

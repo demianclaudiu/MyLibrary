@@ -8,7 +8,11 @@
 <h2>Your Bookshelves</h2>
 
 <p>
-    @Html.ActionLink("Add", "Add", new { libraryId = Model.AsEnumerable().FirstOrDefault().LibraryId })
+    Below are the bookshelves part of your library. Configure them or add a new one.
+</p>
+
+<p>
+    <a href='@Url.Action("Add","Bookshelf",new { libraryId = Guid.Parse(Request.QueryString["libraryId"]) })' class="btn btn-primary btn-sm" type="button">&#x2B Add bookshelf</a>
 </p>
 <table class="table">
     <tr>
@@ -30,10 +34,10 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @Html.ActionLink(item.NumberOfShelves.ToString(), "Index", "Shelf", new { bookshelfId = item.BookshelfId }, null)
+            <a href='@Url.Action("Index","Shelf",new { bookshelfId = item.BookshelfId })' class="btn btn-default btn-sm" type="button">@item.NumberOfShelves.ToString() &raquo;</a>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.NumberOfBooks)
+            <a href='@Url.Action("Index","MyBooks",new { bookshelfId = item.BookshelfId })' class="btn btn-default btn-sm" type="button">@item.NumberOfBooks.ToString() &raquo;</a>
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { bookshelfId=item.BookshelfId }) |

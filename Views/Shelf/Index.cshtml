@@ -8,7 +8,7 @@
 <h2>Shelfs in your bookshelf</h2>
 
 <p>
-    @Html.ActionLink("Add another shelf", "Add", new { bookshelfId = Guid.Parse(Request.QueryString["bookshelfId"]) })
+    <a href='@Url.Action("Add","Shelf",new { bookshelfId = Guid.Parse(Request.QueryString["bookshelfId"]) })' class="btn btn-primary btn-sm" type="button">&#x2B Add shelf</a>
 </p>
 <table class="table">
     <tr>
@@ -19,6 +19,7 @@
             @Html.DisplayName("Books")
         </th>
         <th></th>
+        <th></th>
     </tr>
 
 @foreach (var item in Model) {
@@ -27,10 +28,12 @@
             @Html.DisplayFor(modelItem => item.Description)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.NumberOfBooks)
+            <a href='@Url.Action("Index","MyBooks",new { shelfId = item.ShelfId })' class="btn btn-default btn-sm" type="button">@item.NumberOfBooks.ToString() &raquo;</a>
         </td>
         <td>
-            @Html.ActionLink("Add Book", "AddBookToShelf","MyBooks",new {shelfId=item.ShelfId},null) | 
+            <a href='@Url.Action("AddBookToShelf","MyBooks",new { shelfId = item.ShelfId })' class="btn btn-primary btn-sm" type="button">&#x2B Add book</a>
+        </td>
+        <td>
             @Html.ActionLink("Edit", "Edit", new { shelfId=item.ShelfId }) |
             @Html.ActionLink("Details", "Details", new { shelfId=item.ShelfId }) |
             @Html.ActionLink("Delete", "Delete", new { shelfId=item.ShelfId })
