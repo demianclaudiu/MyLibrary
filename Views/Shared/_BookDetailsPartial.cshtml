@@ -57,13 +57,11 @@
             }
         }
     </td>
-    <td>
-        @Html.ActionLink("Details", "Details", new { bookId = Model.BookId }) <br />
+    <td>        
         @if (User.Identity.IsAuthenticated)
         {
-            @Html.ActionLink("Edit", "Edit", new { bookId = Model.BookId }) <br />
-            @Html.ActionLink("Delete", "Delete", new { bookId = Model.BookId }) <br />
-            @Html.ActionLink("Add cover", "AddCover", new { bookId = Model.BookId })
+            @Html.ActionLink("Edit", "Edit", new { bookId = Model.BookId }, new { @class = "btn btn-primary btn-sm", role = "button" }) <br /><br />
+            @Html.ActionLink("Delete", "Delete", new { bookId = Model.BookId }, new { @class = "btn btn-danger btn-sm", role = "button" })
         }
     </td>
 </tr>

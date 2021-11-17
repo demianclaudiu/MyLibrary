@@ -5,7 +5,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>AddBookToLibrary</h2>
+<h2>Add a book to library</h2>
+
+<div class="pull-right">
+    @using (Html.BeginForm())
+    {
+        <p>
+            Find book: @Html.TextBox("SearchString")
+            <input type="submit" value="Search" />
+        </p>
+    }
+</div>
+
+<br />
+<br />
+
+<p>
+    Select a book to add to library.
+</p>
 
 <table class="table">
     <tr>
@@ -21,49 +38,50 @@
         </th>
     </tr>
 
-@foreach (var item in Model) {
-<tr>
-    <td>
-        @Html.ActionLink("Add", "SelectLibrary", "MyBooks", new {bookId = item.BookId},new { @class = "btn btn-primary btn-lg", role="button" })
-    </td>
-    <td>
-        <img src="@Url.Content(item.CoverImageLocation)" width="75" />
-    </td>
-    <td>
-        <table>
-            <tr>
-                <td>
-                    <span class="font-weight-bold">@Html.DisplayFor(modelItem => item.Title)</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ISBN)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="font-weight-bold">@Html.DisplayFor(modelItem => item.Publisher)</span>
-</td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.YearPublished)
-                </td>
-            </tr>
-        </table>
-    </td>
-    <td>
-        @{
-            List<string> authors = item.Author.Split(',').ToList();
-            foreach (string author in authors)
-            {
-                @Html.DisplayFor(model => author)
-                <br />
-            }
-        }
-    </td>
-</tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink("Add", "SelectLibrary", "MyBooks", new { bookId = item.BookId }, new { @class = "btn btn-primary btn-lg", role = "button" })
+            </td>
+            <td>
+                <img src="@Url.Content(item.CoverImageLocation)" width="75" />
+            </td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <span class="font-weight-bold">@Html.DisplayFor(modelItem => item.Title)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ISBN)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="font-weight-bold">@Html.DisplayFor(modelItem => item.Publisher)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.YearPublished)
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                @{
+                    List<string> authors = item.Author.Split(',').ToList();
+                    foreach (string author in authors)
+                    {
+                        @Html.DisplayFor(model => author)
+                        <br />
+                    }
+                }
+            </td>
+        </tr>
+    }
 
 </table>

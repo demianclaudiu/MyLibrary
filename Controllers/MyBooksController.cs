@@ -17,13 +17,27 @@ namespace MyLibrary.Controllers
 
         [Authorize(Roles = "User, Admin")]
         // GET: MyBooks
-        public ActionResult Index(string searchString)
+        public ActionResult Index(string searchString, string libraryId, string bookshelfId, string shelfId)
         {
-            List<AddedBookViewModel> addedBooks;
+            List<AddedBookViewModel> addedBooks = new List<AddedBookViewModel>();
 
-            addedBooks = bookRepository.GetAllAddeBooks(GetCurrentUserId(),searchString);
-            
-            return View(addedBooks);
+            if (libraryId!=null && libraryId.Trim() != "")
+            {
+                addedBooks = bookRepository.GetAllAddeBooksByLibraryId(Guid.Parse(libraryId));
+            } else if (bookshelfId != null && bookshelfId.Trim() != "")
+            {
+                addedBooks = bookRepository.GetAllAddeBooksByBookshelfId(Guid.Parse(bookshelfId));
+            } else if (shelfId != null && shelfId.Trim() != "")
+            {
+                addedBooks = bookRepository.GetAllAddeBooksByShelfId(Guid.Parse(shelfId));
+            } else
+            {
+                addedBooks = bookRepository.GetAllAddeBooks(GetCurrentUserId(), searchString);
+            }
+
+            ViewBag.BookCount = addedBooks.Count;
+
+            return View(addedBooks.OrderBy(x=>x.Title));
         }
 
         [Authorize(Roles = "User, Admin")]
@@ -57,7 +71,7 @@ namespace MyLibrary.Controllers
                 };
                 ownershipRepository.InsertOwnership(ownershipModel);
                 ViewBag.SuccessfullyAdded = "Book Successfuly added!";
-                return RedirectToAction("AddBookToShelf", new { shelfId = shelfId, searchString = searchString });
+                return RedirectToAction("Index", new { shelfId = shelfId });
             }
             catch
             {
@@ -66,11 +80,19 @@ namespace MyLibrary.Controllers
         }
 
         [Authorize(Roles = "User, Admin")]
-        public ActionResult AddBookToLibrary()
+        public ActionResult AddBookToLibrary(string searchString)
         {
-            List<BookModel> bookModels = bookRepository.GetAllBooks();
 
-            return View(bookModels);
+            List<BookModel> bookModels;
+            if (searchString != null && searchString.Trim() != "")
+            {
+                bookModels = bookRepository.GetAllBooksBySearch(searchString);
+                return View(bookModels.OrderBy(x=>x.Title));
+            }
+
+            bookModels = bookRepository.GetAllBooks();
+
+            return View(bookModels.OrderBy(x => x.Title).Take(20));
         }
 
         [Authorize(Roles = "User, Admin")]

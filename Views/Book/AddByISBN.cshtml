@@ -4,15 +4,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>AddByISBN</h2>
+<h2>Add a book automatically</h2>
+
+<p>
+    Insert the book ISBN below and we will look for it online. If we cannot find it, you will be redirected to manually add the book yourself to our catalog.
+</p>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>BookModel</h4>
-        <hr />
         <div class="form-group">
             @Html.Label("ISBN", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

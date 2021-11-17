@@ -5,15 +5,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Books in library</h2>
+<div class="pull-left">
+    @Html.ActionLink("Add book", "AddBookToLibrary", "MyBooks", null, new { @class = "btn btn-primary btn-sm" })
+</div>
+<div class="pull-right">
+    @using (Html.BeginForm())
+    {
+        <p>
+            Find book: @Html.TextBox("SearchString")
+            <input type="submit" value="Search" />
+        </p>
+    }
+</div>
 
-@using (Html.BeginForm())
-{
-    <p>
-        Find book: @Html.TextBox("SearchString")
-        <input type="submit" value="Search" />
-    </p>
-}
+<br /><br/>
+
+<p>
+    @ViewBag.Bookcount books added.
+</p>
+
 <table class="table">
     <tr>
         <th>

@@ -5,24 +5,54 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Book catalog</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    Below are the latest books added to the catalog. Search through the catalog by title, author, publisher, Genre and year published using the search box bellow.
 </p>
 
-@using (Html.BeginForm())
+<div class="pull-left">
+    @if (!User.Identity.IsAuthenticated)
+    {
+
+        @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })<span> to add a new book.</span>
+
+    }
+    else
+    {
+
+        @Html.ActionLink("Auto Add", "AddByISBN", "Book", null, new { @class = "btn btn-primary btn-sm", role = "button" }) <span>&nbsp;</span>
+        @Html.ActionLink("Manual Add", "Add", "Book", null, new { @class = "btn btn-primary btn-sm", role = "button" })
+
+    }
+</div>
+<div class="pull-right ">
+    @using (Html.BeginForm())
+    {
+
+        <span>Find book:</span> @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+
+    }
+</div>
+<br />
+<br />
+
+<p>
+    @ViewBag.BookCount books found.
+</p>
+
+@if (ViewBag.BookCount > 10)
 {
     <p>
-        Find book: @Html.TextBox("SearchString")
-        <input type="submit" value="Search" />
+        Showing only latest 10 books added.
     </p>
 }
 
 <table class="table table-hover">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.CoverImageLocation)
+            Cover
         </th>
         <th>
             @Html.DisplayName("Book")

@@ -55,6 +55,8 @@ namespace MyLibrary.Controllers
 
                 UpdateModel(shelfModel);
 
+                shelfModel.ShelfId = Guid.NewGuid();
+
                 shelfRepository.InserShelf(shelfModel);
 
                 return RedirectToAction("Index", new { bookshelfId = shelfModel.BookshelfId });
@@ -83,6 +85,7 @@ namespace MyLibrary.Controllers
                 ShelfModel shelfModel = new ShelfModel();
 
                 UpdateModel(shelfModel);
+
 
                 shelfRepository.UpdateShelf(shelfModel);
 

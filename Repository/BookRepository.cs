@@ -236,9 +236,140 @@ namespace MyLibrary.Repository
             return null;
         }
 
+        public List<AddedBookViewModel> GetAllAddeBooksByShelfId(Guid shelfId)
+        {
+            List<AddedBookViewModel> addedBooks = new List<AddedBookViewModel>();
+            Shelf shelf = dbContext.Shelfs.FirstOrDefault(x => x.ShelfId == shelfId);
+            Bookshelf bookshelf = dbContext.Bookshelfs.FirstOrDefault(x => x.BookshelfId == shelf.BookshelfId);
+            Library library = dbContext.Libraries.FirstOrDefault(x => x.LibraryId == bookshelf.LibraryId);
+
+            List<Ownership> ownerships = dbContext.Ownerships.AsNoTracking().Where(x => x.ShelfId == shelf.ShelfId).ToList();
+            if (ownerships.Count != 0)
+            {
+                foreach (Ownership ownership in ownerships)
+                {
+                    Book book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId);
+
+                    if (book != null)
+                    {
+                        addedBooks.Add(new AddedBookViewModel
+                        {
+                            OwnershipId = ownership.OwnershipId,
+                            BookId = book.BookId,
+                            CoverImageLocation = book.CoverImageLocation,
+                            Title = book.Title,
+                            Author = book.Author,
+                            IsRead = ownership.IsRead ? "Read" : "Not Read",
+                            BookMark = ownership.BookmarkedPage.HasValue ? ownership.BookmarkedPage.Value : 0,
+                            LibraryDescription = library.Description,
+                            BookshelfDescription = bookshelf.Description,
+                            ShelfDescription = shelf.Description,
+                            ShelfId = shelf.ShelfId
+                        });
+                    }
+                }
+            }
+
+            return addedBooks;
+        }
+
+        public List<AddedBookViewModel> GetAllAddeBooksByBookshelfId(Guid bookshelfId)
+        {
+            List<AddedBookViewModel> addedBooks = new List<AddedBookViewModel>();
+            Bookshelf bookshelf = dbContext.Bookshelfs.FirstOrDefault(x => x.BookshelfId == bookshelfId);
+            Library library = dbContext.Libraries.FirstOrDefault(x => x.LibraryId == bookshelf.LibraryId);
+
+            List<Shelf> shelves = dbContext.Shelfs.AsNoTracking().Where(x => x.BookshelfId == bookshelf.BookshelfId).ToList();
+            if (shelves.Count != 0)
+            {
+                foreach (Shelf shelf in shelves)
+                {
+                    List<Ownership> ownerships = dbContext.Ownerships.AsNoTracking().Where(x => x.ShelfId == shelf.ShelfId).ToList();
+                    if (ownerships.Count != 0)
+                    {
+                        foreach (Ownership ownership in ownerships)
+                        {
+                            Book book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId);
+
+                            if (book != null)
+                            {
+                                addedBooks.Add(new AddedBookViewModel
+                                {
+                                    OwnershipId = ownership.OwnershipId,
+                                    BookId = book.BookId,
+                                    CoverImageLocation = book.CoverImageLocation,
+                                    Title = book.Title,
+                                    Author = book.Author,
+                                    IsRead = ownership.IsRead ? "Read" : "Not Read",
+                                    BookMark = ownership.BookmarkedPage.HasValue ? ownership.BookmarkedPage.Value : 0,
+                                    LibraryDescription = library.Description,
+                                    BookshelfDescription = bookshelf.Description,
+                                    ShelfDescription = shelf.Description,
+                                    ShelfId = shelf.ShelfId
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            return addedBooks;
+        }
+
+        public List<AddedBookViewModel> GetAllAddeBooksByLibraryId(Guid libraryId)
+        {
+            List<AddedBookViewModel> addedBooks = new List<AddedBookViewModel>();
+            Library library = dbContext.Libraries.FirstOrDefault(x => x.LibraryId == libraryId);
+
+            List<Bookshelf> bookshelves = dbContext.Bookshelfs.AsNoTracking().Where(x => x.LibraryId == library.LibraryId).ToList();
+            if (bookshelves.Count != 0)
+            {
+                foreach (Bookshelf bookshelf in bookshelves)
+                {
+                    List<Shelf> shelves = dbContext.Shelfs.AsNoTracking().Where(x => x.BookshelfId == bookshelf.BookshelfId).ToList();
+                    if (shelves.Count != 0)
+                    {
+                        foreach (Shelf shelf in shelves)
+                        {
+                            List<Ownership> ownerships = dbContext.Ownerships.AsNoTracking().Where(x => x.ShelfId == shelf.ShelfId).ToList();
+                            if (ownerships.Count != 0)
+                            {
+                                foreach (Ownership ownership in ownerships)
+                                {
+                                    Book book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId);
+
+                                    if (book != null)
+                                    {
+                                        addedBooks.Add(new AddedBookViewModel
+                                        {
+                                            OwnershipId = ownership.OwnershipId,
+                                            BookId = book.BookId,
+                                            CoverImageLocation = book.CoverImageLocation,
+                                            Title = book.Title,
+                                            Author = book.Author,
+                                            IsRead = ownership.IsRead ? "Read" : "Not Read",
+                                            BookMark = ownership.BookmarkedPage.HasValue ? ownership.BookmarkedPage.Value : 0,
+                                            LibraryDescription = library.Description,
+                                            BookshelfDescription = bookshelf.Description,
+                                            ShelfDescription = shelf.Description,
+                                            ShelfId = shelf.ShelfId
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return addedBooks;
+        }
+
+
         public List<AddedBookViewModel> GetAllAddeBooks(Guid userId, string searchString)
         {
             List<AddedBookViewModel> addedBooks = new List<AddedBookViewModel>();
+
             List<Library> libraries = dbContext.Libraries.AsNoTracking().Where(x => x.UserId == userId).ToList();
             if (libraries.Count != 0)
             {
@@ -262,7 +393,10 @@ namespace MyLibrary.Repository
                                             Book book;
                                             if (searchString != null && !String.IsNullOrEmpty(searchString))
                                             {
-                                                book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId && x.Title.ToLower().Contains(searchString.Trim().ToLower()));
+                                                book = dbContext.Books.AsNoTracking().FirstOrDefault(x => x.BookId == ownership.BookId && 
+                                                (x.Title.ToLower().Contains(searchString.Trim().ToLower()) || 
+                                                x.Author.ToLower().Contains(searchString.Trim().ToLower()) ||
+                                                x.Genre.ToLower().Contains(searchString.Trim().ToLower()) ));
                                             }
                                             else
                                             {
@@ -296,7 +430,7 @@ namespace MyLibrary.Repository
             }
 
             return addedBooks;
-        
+
         }
 
         public UpdateReadViewModel GetUpdateReadViewModel(Guid ownershipId)

@@ -126,6 +126,7 @@ namespace MyLibrary.Controllers
                     {
                         ShelfModel shelfModel = new ShelfModel
                         {
+                            ShelfId = Guid.NewGuid(),
                             Description = $"Shelf {i + 1}",
                             BookshelfId = bookshelfModel.BookshelfId
                         };

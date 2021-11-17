@@ -21,6 +21,7 @@ namespace MyLibrary.Controllers
             if (searchString!=null && searchString.Trim()!="")
             {
                 bookModels = bookRepository.GetAllBooksBySearch(searchString);
+                ViewBag.BookCount = bookModels.Count;
                 return View(bookModels);
             }
 
@@ -48,8 +49,10 @@ namespace MyLibrary.Controllers
                     bookModels = bookRepository.GetAllBooks();
                     break;
             }
-            
-            return View(bookModels);
+
+            ViewBag.BookCount = bookModels.Count;
+
+            return View(bookModels.OrderByDescending(x=>x.DateAdded).Take(10));
         }
 
         // GET: Book/Details/5
@@ -138,7 +141,7 @@ namespace MyLibrary.Controllers
 
                 bookRepository.UpdateBook(bookModel);
 
-                return Redirect(Request.Headers["Referer"].ToString());
+                return RedirectToAction("Index");
             }
             catch
             {

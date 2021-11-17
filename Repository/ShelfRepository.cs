@@ -98,6 +98,8 @@ namespace MyLibrary.Repository
 
         public void InserShelf(ShelfModel shelfModel)
         {
+            
+            
             dbContext.Shelfs.InsertOnSubmit(MapModelToDBObject(shelfModel));
             dbContext.SubmitChanges();
         }
