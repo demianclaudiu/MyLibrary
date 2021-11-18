@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>BatchCreateBookshelf</h2>
+<h2>Add bookshelves to your new library</h2>
 
 
 @using (Html.BeginForm())
@@ -13,7 +13,7 @@
     @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
-    <h4>BookshelfAddViewModel</h4>
+    <h4>Configure each individual bookshelf with its name and number of shelves</h4>
     @{int index = 0;
     }
     @foreach (var item in Model)

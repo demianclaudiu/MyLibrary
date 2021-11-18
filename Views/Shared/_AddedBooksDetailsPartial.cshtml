@@ -26,8 +26,8 @@
         @Html.DisplayFor(model => Model.ShelfDescription)
     </td>
     <td>
-        @Html.ActionLink("Move", "Move", new { ownershipId = Model.OwnershipId }) <br />
-        @Html.ActionLink("Remove", "Remove", new { ownershipId = Model.OwnershipId }) <br />
-        @Html.ActionLink("Read it", "UpdateRead", new { ownershipId = Model.OwnershipId }) 
+        @Html.ActionLink("Move", "Move", new { ownershipId = Model.OwnershipId }, new { @class = "btn btn-primary btn-sm", role = "button" }) <br /><br />
+        @Html.ActionLink("Remove", "Remove", new { ownershipId = Model.OwnershipId }, new { @class = "btn btn-danger btn-sm", role = "button" }) <br /><br />
+        @Html.ActionLink("Read it", "UpdateRead", new { ownershipId = Model.OwnershipId }, new { @class = "btn btn-success btn-sm", role = "button" }) 
     </td>
 </tr>
