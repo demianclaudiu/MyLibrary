@@ -38,7 +38,6 @@ namespace MyLibrary.Repository
 
         public void InsertUser(UserModel userModel)
         {
-            userModel.UserId = Guid.NewGuid();
             dbContext.Users.InsertOnSubmit(MapModelToDbObject(userModel));
             dbContext.SubmitChanges();
         }

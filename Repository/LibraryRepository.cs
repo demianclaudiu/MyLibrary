@@ -86,40 +86,7 @@ namespace MyLibrary.Repository
             return MapDBObjectToModel(dbContext.Libraries
                 .FirstOrDefault(x => x.LibraryId == libraryId));
         }
-
-
-        //}public List<LibraryViewModel> GetAllLibraryViewModelByUserId(Guid userId)
-        //{
-        //    List<LibraryViewModel> libraryViewModels = new List<LibraryViewModel>();
-        //    foreach (Library dbLibrary in dbContext.Libraries.Where(x=>x.UserId == userId))
-        //    {
-        //        LibraryViewModel libraryViewModel = new LibraryViewModel();
-        //        libraryViewModel.LibraryId = dbLibrary.LibraryId;
-        //        libraryViewModel.LibraryDescription = dbLibrary.Description;
-
-        //        List<BookshelfModel> bookshelves = new List<BookshelfModel>();
-        //        Dictionary<Guid, List<ShelfModel>> bookshelfShelves = new Dictionary<Guid, List<ShelfModel>>();
-        //        foreach (Bookshelf dbBookshelf in dbLibrary.Bookshelfs)
-        //        {
-        //            BookshelfModel bookshelfModel = new BookshelfModel();
-        //            bookshelfModel.BookshelfId = dbBookshelf.BookshelfId;
-        //            bookshelfModel.Description = dbBookshelf.Description;
-        //            bookshelves.Add(bookshelfModel);
-
-        //            List<ShelfModel> shelves = new List<ShelfModel>();
-        //            foreach (Shelf dbShelf in dbBookshelf.Shelfs)
-        //            {
-        //                ShelfModel shelfModel = new ShelfModel();
-        //                shelfModel.ShelfId = dbShelf.ShelfId;
-        //                shelfModel.Description = dbShelf.Description;
-        //                shelves.Add(shelfModel);
-        //            }
-        //            bookshelfShelves.Add(bookshelfModel.BookshelfId, shelves);
-
-        //        }
-        //    }
-        //    return libraryViewModels;
-        //}
+ 
 
         public Guid InsertLibrary(LibraryModel libraryModel)
         {
